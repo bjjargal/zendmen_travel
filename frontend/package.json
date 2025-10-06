@@ -14,8 +14,10 @@
     "copy-html-entry": "cp ../zendmen_travel/public/frontend/index.html ../zendmen_travel/www/frontend.html"
   },
   "dependencies": {
+    "ant-design-vue": "4.x",
     "feather-icons": "^4.29.2",
     "frappe-ui": "^0.1.192",
+    "pinia": "^3.0.3",
     "socket.io-client": "^4.7.2",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"

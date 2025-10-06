@@ -1,50 +1,33 @@
-import { createApp } from "vue"
+import './index.css'
 
-import App from "./App.vue"
-import router from "./router"
-import { initSocket } from "./socket"
-
+import { createApp } from 'vue'
+import { dayjs } from '@/utils'
+import App from './App.vue'
+import Antd from 'ant-design-vue'
+import { ConfigProvider } from 'ant-design-vue'
+import 'ant-design-vue/dist/reset.css';
+import { createPinia } from 'pinia'
 import {
-	Alert,
-	Badge,
-	Button,
-	Dialog,
-	ErrorMessage,
-	FormControl,
-	Input,
-	TextInput,
-	frappeRequest,
-	pageMetaPlugin,
-	resourcesPlugin,
-	setConfig,
-} from "frappe-ui"
+  setConfig,
+  frappeRequest,
+  resourcesPlugin,
+  FeatherIcon
+} from 'frappe-ui'
+import router from './router'
 
-import "./index.css"
 
-const globalComponents = {
-	Button,
-	TextInput,
-	Input,
-	FormControl,
-	ErrorMessage,
-	Dialog,
-	Alert,
-	Badge,
-}
 
-const app = createApp(App)
-
-setConfig("resourceFetcher", frappeRequest)
-
-app.use(router)
+let pinia = createPinia()
+let app = createApp(App)
+setConfig('resourceFetcher', frappeRequest)
+app.component('ConfigProvider', ConfigProvider)
+app.config.globalProperties.$dayjs = dayjs
+app.component('FeatherIcon', FeatherIcon)
 app.use(resourcesPlugin)
-app.use(pageMetaPlugin)
+app.use(Antd)
+app.use(pinia)
+app.use(router)
 
-const socket = initSocket()
-app.config.globalProperties.$socket = socket
 
-for (const key in globalComponents) {
-	app.component(key, globalComponents[key])
-}
+app.mount('#app')
 
-app.mount("#app")
