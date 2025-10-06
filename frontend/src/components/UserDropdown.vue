@@ -13,7 +13,7 @@
         </a-button>
         <template #overlay>
             <a-menu>
-                <a-menu-item v-if="session.roles.includes('HR Manager')" @click="openFrappe">
+                <a-menu-item v-if="session.roles.includes('System Manager')" @click="openFrappe">
                     <span class="flex gap-2">
                         <FeatherIcon name="server" class="size-5" /> Frappe
                     </span>

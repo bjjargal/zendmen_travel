@@ -5,7 +5,7 @@
         class="w-full max-w-md bg-white/95  backdrop-blur-sm rounded-xl shadow-2xl p-8 transition-all duration-300 hover:shadow-2xl relative">
         <div class="">
           <p class="text-lg font-bold mb-2 text-center erp-color">
-            ERP Систем
+            Zendmen Travel
           </p>
           <div class="flex justify-center mb-8">
             <img class="h-58" src="@/assets/images/erplogo.png" :alt="'LOGO'" />

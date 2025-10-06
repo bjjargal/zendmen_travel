@@ -1,7 +1,5 @@
 import frappe
-
-
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_logged_user():
     try:
         roles = frappe.get_roles()
