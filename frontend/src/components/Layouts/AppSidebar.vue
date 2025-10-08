@@ -1,7 +1,7 @@
 <template>
     <a-layout-sider class="relative flex-col !overflow-y-auto !bg-[#111727] !flex " width="300">
         <div class="p-4 text-white text-3xl font-bold text-center ">
-            OTGO ERP
+            <img src="@/assets/images/logo.png" alt="">
         </div>
         <div class="flex-1 ! !pr-5 [scrollbar-width:none] [-ms-overflow-style:none] !hide-scrollbar">
             <div v-for="view in allViews" :key="view.label">

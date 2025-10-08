@@ -3,7 +3,7 @@
     class="flex h-7 my-0.5 cursor-pointer items-center rounded hover:bg-gray-500 text-white duration-400 ease-in-out focus:outline-none focus:transition-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-gray-400"
     :class="isActive ? 'bg-gray-700 shadow-sm' : ''">
     <div class="flex w-full items-center justify-between duration-300 ease-in-out px-2 py-1"
-      :class="ischild ? 'border-b border-[#303246]' : ''" @click="handleClick">
+      :class="ischild ? 'border-b border-[#1627e7]' : ''" @click="handleClick">
       <div class="flex items-center truncate">
         <Tooltip :text="label" placement="right">
           <slot name="icon">

@@ -10,10 +10,14 @@ const links = [
     },
     {
         label: 'Tour',
-        icon: 'home',
-        to: 'Home',
+        icon: 'map',
+        to: 'Tour',
     },
-    
+    {
+        label: 'Guide',
+        icon: 'user',
+        to: 'Guide',
+    },
 ]
 
 function hasAccess(link, roles) {
@@ -21,7 +25,6 @@ function hasAccess(link, roles) {
     return link.roles.some(role => roles.value.includes(role))
 }
 
-// 👉 computed version that depends on session roles
 export default function useAllViews() {
     const session = sessionStore()
     const { roles } = storeToRefs(session)
