@@ -11,7 +11,6 @@
             <img class="h-58" src="@/assets/images/erplogo.png" :alt="'LOGO'" />
           </div>
         </div>
-
         <a-form :model="form" name="basic" @submit="submit">
           <a-form-item name="email" :rules="[{ required: true, message: 'Е-Майл хаягаа оруулна уу!' }]">
             <label for="email">Е-Майл хаяг</label>

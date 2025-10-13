@@ -14,9 +14,15 @@ const routes = [
     component: () => import('@/pages/Guide.vue'),
   },
   {
-    path: '/tour',
+    path: '/tour/',
+    name: 'TourList',
+    component: () => import('@/pages/TourList.vue'),
+  },
+  {
+    path: '/tour/:name?',
     name: 'Tour',
-    component: () => import('@/pages/Guide.vue'),
+    props: true,
+    component: () => import('@/pages/Tour.vue'),
   },
   {
     name: 'Login',

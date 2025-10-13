@@ -1,50 +1,31 @@
 {
  "actions": [],
  "autoname": "autoincrement",
- "creation": "2025-10-06 14:02:59.987499",
+ "creation": "2025-10-08 17:35:47.997351",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "first_name",
-  "last_name",
-  "image",
-  "email",
-  "phone_number"
+  "destination_name",
+  "geolocation_nboz"
  ],
  "fields": [
   {
-   "fieldname": "first_name",
+   "fieldname": "destination_name",
    "fieldtype": "Data",
-   "label": "First name"
+   "label": "Destination Name"
   },
   {
-   "fieldname": "last_name",
-   "fieldtype": "Data",
-   "label": "Last name"
-  },
-  {
-   "fieldname": "image",
-   "fieldtype": "Attach Image",
-   "label": "image"
-  },
-  {
-   "fieldname": "email",
-   "fieldtype": "Data",
-   "label": "email"
-  },
-  {
-   "fieldname": "phone_number",
-   "fieldtype": "Data",
-   "label": "Phone Number"
+   "fieldname": "geolocation_nboz",
+   "fieldtype": "Geolocation"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-08 13:11:54.956174",
+ "modified": "2025-10-08 18:04:58.920102",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
- "name": "Guide",
+ "name": "Destination",
  "naming_rule": "Autoincrement",
  "owner": "Administrator",
  "permissions": [

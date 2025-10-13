@@ -1,6 +1,6 @@
 <template>
   <a-style-provider hash-priority="high">
-    <ConfigProvider>
+    <ConfigProvider :theme="{ token: { colorPrimary: '#D8C690' } }">
       <router-view v-if="$route.name == 'Login'" />
       <Layout v-if="session.isLoggedIn"><router-view /></Layout>
     </ConfigProvider>

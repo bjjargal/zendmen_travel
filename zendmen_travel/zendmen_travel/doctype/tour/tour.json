@@ -1,26 +1,72 @@
 {
  "actions": [],
- "allow_rename": 1,
+ "autoname": "autoincrement",
  "creation": "2025-10-06 14:00:45.046079",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "tour_name"
+  "tour_name",
+  "category",
+  "column_break_gprp",
+  "duration",
+  "image",
+  "section_break_yczy",
+  "activities",
+  "accomodation"
  ],
  "fields": [
   {
    "fieldname": "tour_name",
    "fieldtype": "Data",
    "label": "Tour Name"
+  },
+  {
+   "fieldname": "column_break_gprp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Int",
+   "label": "Duration"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Select",
+   "label": "Category",
+   "options": "Budget\nLuxury\nComfort"
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "label": "Image"
+  },
+  {
+   "fieldname": "section_break_yczy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "activities",
+   "fieldtype": "Table",
+   "label": "Activities",
+   "options": "Tour Activities"
+  },
+  {
+   "fieldname": "accomodation",
+   "fieldtype": "Table",
+   "label": "Accomodation",
+   "options": "Tour Accomodation"
   }
  ],
  "grid_page_length": 50,
+ "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-06 14:01:08.070700",
+ "make_attachments_public": 1,
+ "modified": "2025-10-08 17:48:56.824321",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Tour",
+ "naming_rule": "Autoincrement",
  "owner": "Administrator",
  "permissions": [
   {
