@@ -1,33 +1,28 @@
 {
  "actions": [],
- "autoname": "field:activity_name",
- "creation": "2025-10-06 17:06:41.574150",
+ "allow_rename": 1,
+ "autoname": "field:grade_name",
+ "creation": "2025-10-14 17:33:57.042431",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "activity_name",
-  "cost"
+  "grade_name"
  ],
  "fields": [
   {
-   "fieldname": "activity_name",
+   "fieldname": "grade_name",
    "fieldtype": "Data",
-   "label": "Activity Name",
+   "label": "Grade name",
    "unique": 1
-  },
-  {
-   "fieldname": "cost",
-   "fieldtype": "Currency",
-   "label": "Cost"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-14 16:41:31.936145",
+ "modified": "2025-10-14 17:35:01.858830",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
- "name": "Activity",
+ "name": "Tour Grade",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

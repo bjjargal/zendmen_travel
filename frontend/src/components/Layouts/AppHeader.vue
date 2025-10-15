@@ -2,9 +2,9 @@
     <a-layout-header class="!bg-white !border-b overflow-hidden  !px-8 !h-20 flex justify-between items-center">
         <div></div>
         <div class="flex gap-4 items-center">
-            <div>
+            <!-- <div>
                 <Notifications />
-            </div>
+            </div> -->
             <div>
                 <UserDropdown />
             </div>

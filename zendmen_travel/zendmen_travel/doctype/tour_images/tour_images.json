@@ -1,46 +1,40 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2025-10-08 16:14:24.757021",
+ "creation": "2025-10-14 17:51:13.459353",
  "doctype": "DocType",
- "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "activity_name",
-  "cost",
-  "day"
+  "day",
+  "title",
+  "attach_image_nssn"
  ],
  "fields": [
   {
-   "fieldname": "activity_name",
-   "fieldtype": "Link",
+   "fieldname": "title",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Activity Name",
-   "options": "Activity"
-  },
-  {
-   "fieldname": "cost",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Cost"
+   "label": "Title"
   },
   {
    "fieldname": "day",
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Day"
+  },
+  {
+   "fieldname": "attach_image_nssn",
+   "fieldtype": "Attach Image"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-14 15:51:48.419594",
+ "modified": "2025-10-14 17:52:37.735619",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
- "name": "Tour Activities",
+ "name": "Tour Images",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",

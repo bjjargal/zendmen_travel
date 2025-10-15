@@ -1,34 +1,39 @@
 {
  "actions": [],
- "autoname": "field:activity_name",
- "creation": "2025-10-06 17:06:41.574150",
+ "allow_rename": 1,
+ "creation": "2025-10-14 15:44:34.530016",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "activity_name",
-  "cost"
+  "tour_name",
+  "duration",
+  "category"
  ],
  "fields": [
   {
-   "fieldname": "activity_name",
-   "fieldtype": "Data",
-   "label": "Activity Name",
-   "unique": 1
+   "fieldname": "tour_name",
+   "fieldtype": "Link",
+   "label": "Tour Name",
+   "options": "Tour"
   },
   {
-   "fieldname": "cost",
-   "fieldtype": "Currency",
-   "label": "Cost"
+   "fieldname": "duration",
+   "fieldtype": "Int",
+   "label": "Duration"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Select",
+   "label": "category"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-14 16:41:31.936145",
+ "modified": "2025-10-14 15:46:59.600891",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
- "name": "Activity",
- "naming_rule": "By fieldname",
+ "name": "Trip",
  "owner": "Administrator",
  "permissions": [
   {

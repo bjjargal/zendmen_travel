@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "autoincrement",
+ "autoname": "field:destination_name",
  "creation": "2025-10-08 17:35:47.997351",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -12,7 +12,8 @@
   {
    "fieldname": "destination_name",
    "fieldtype": "Data",
-   "label": "Destination Name"
+   "label": "Destination Name",
+   "unique": 1
   },
   {
    "fieldname": "geolocation_nboz",
@@ -22,11 +23,11 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-08 18:04:58.920102",
+ "modified": "2025-10-14 17:08:18.931906",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Destination",
- "naming_rule": "Autoincrement",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

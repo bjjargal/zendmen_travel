@@ -18,6 +18,16 @@ const links = [
         icon: 'user',
         to: 'Guide',
     },
+    {
+        label: 'Activity',
+        icon: 'activity',
+        to: 'ActivityList',
+    },
+    {
+        label: 'Destination',
+        icon: 'map',
+        to: 'DestinationList',
+    },
 ]
 
 function hasAccess(link, roles) {

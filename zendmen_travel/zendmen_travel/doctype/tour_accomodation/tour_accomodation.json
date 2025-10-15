@@ -7,39 +7,82 @@
  "engine": "InnoDB",
  "field_order": [
   "day",
+  "title",
   "accomodation",
+  "hotel_star",
+  "breakfast",
+  "lunch",
+  "dinner",
   "destination",
-  "price"
+  "price",
+  "description"
  ],
  "fields": [
   {
    "fieldname": "day",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Day"
   },
   {
    "fieldname": "accomodation",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Accomodation",
    "options": "Camping\nHotel"
   },
   {
    "fieldname": "destination",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Destination",
    "options": "Destination"
   },
   {
    "fieldname": "price",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Price"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "title"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Long Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "hotel_star",
+   "fieldtype": "Int",
+   "label": "Hotel star"
+  },
+  {
+   "default": "0",
+   "fieldname": "breakfast",
+   "fieldtype": "Check",
+   "label": "Breakfast"
+  },
+  {
+   "default": "0",
+   "fieldname": "lunch",
+   "fieldtype": "Check",
+   "label": "Lunch"
+  },
+  {
+   "default": "0",
+   "fieldname": "dinner",
+   "fieldtype": "Check",
+   "label": "Dinner"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-08 17:51:03.561250",
+ "modified": "2025-10-14 17:50:54.837154",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Tour Accomodation",

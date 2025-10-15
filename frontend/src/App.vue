@@ -1,6 +1,6 @@
 <template>
   <a-style-provider hash-priority="high">
-    <ConfigProvider :theme="{ token: { colorPrimary: '#D8C690' } }">
+    <ConfigProvider>
       <router-view v-if="$route.name == 'Login'" />
       <Layout v-if="session.isLoggedIn"><router-view /></Layout>
     </ConfigProvider>
@@ -18,6 +18,5 @@ const DesktopLayout = defineAsyncComponent(() =>
 const Layout = computed(() => {
   return DesktopLayout
 })
-
-
 </script>
+<!-- :theme="{ token: { colorPrimary: '#D8C690' } }" -->

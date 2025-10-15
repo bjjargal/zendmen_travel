@@ -1,21 +1,23 @@
 import { defineStore } from 'pinia'
-import { createResource } from 'frappe-ui'
+import { createListResource } from 'frappe-ui'
 import { ref } from 'vue';
 
-// In DestinationStore (stores/destinations.js or similar)
-export const DestinationStore = defineStore('destination', () => {
-    const destinations = createResource({
-        method: 'GET',
-        url: 'zendmen_travel.api.get_destination',
-        cache: "destinations",
+export const DestinationStore = defineStore('destinationStore', () => {
+    var destinationOptions = [];
+
+    const destinations = createListResource({
+        doctype: 'Destination',
+        cache: "destinationsCache",
+        fields: ['name', 'destination_name'],
         auto: true,
-        transform(data) {
-            return data.map(d => ({
+        pageLength: 999,
+        onSuccess(data) {
+            destinationOptions.value = data.map(d => ({
                 value: d.name,
                 label: d.destination_name
-            }))
+            }));
         }
     });
 
-    return { destinations }
+    return { destinations, destinationOptions }
 });
