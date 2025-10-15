@@ -8,6 +8,7 @@
  "field_order": [
   "day",
   "title",
+  "difficulty",
   "accomodation",
   "hotel_star",
   "breakfast",
@@ -76,13 +77,19 @@
    "fieldname": "dinner",
    "fieldtype": "Check",
    "label": "Dinner"
+  },
+  {
+   "fieldname": "difficulty",
+   "fieldtype": "Select",
+   "label": "Difficulty",
+   "options": "Easy\nModerate\nChallenging"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-14 17:50:54.837154",
+ "modified": "2025-10-15 17:18:32.884010",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Tour Accomodation",

@@ -9,31 +9,32 @@
     <a-spin v-if="tour.get.loading">Loading</a-spin>
     <div v-else class="w-full h-full bg-white flex">
         <div class=" w-[25%] h-full p-2 flex flex-col gap-1 border-r">
-            <FileUploader :fileTypes="['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx']" :multiple="false"
-                @success="handleFileUpload" class="border-none p-0">
-                <template #default="{ openFileSelector }">
-                    <div class="rounded overflow-hidden" @click="openFileSelector">
-                        <img v-if="tour?.doc.image" :src="tour.doc.image" alt="avatar" />
-                        <div v-else>
-                            <div class="ant-upload-text">Upload</div>
-                        </div>
-                    </div>
-                </template>
-            </FileUploader>
-            <a-form layout="vertical" class="">
+            <a-form layout="vertical" class="w-full">
                 <a-form-item :colon="false" labelAlign="left" label="Tour name">
                     <a-input type="text" v-model:value="tour.doc.tour_name" />
                 </a-form-item>
+                <a-form-item :colon="false" labelAlign="left" label="Subtitle">
+                    <a-textarea v-model:value="tour.doc.sub_title" :row="6" />
+                </a-form-item>
                 <a-form-item :colon="false" labelAlign="left" label="Duration">
-                    <a-input-number class="!w-full" v-model:value="tour.doc.duration" :min="1" :max="20" />
+                    <a-input-number class="!w-full" v-model:value="tour.doc.duration" :min="1" :max="20"
+                        addon-after="Days" />
                 </a-form-item>
-                <a-form-item :colon="false" labelAlign="left" label="Category">
-                    <a-select :options="[
-                        { label: 'Budget', value: 'Budget' },
-                        { label: 'Luxury', value: 'Luxury' },
-                        { label: 'Comfort', value: 'Comfort' },
-                    ]" v-model:value="tour.doc.category" />
+                <a-form-item :colon="false" labelAlign="left" label="Difficulty">
+                    <a-select :options="[{ value: 'Easy-Moderate' }]" v-model:value="tour.doc.difficulty" />
                 </a-form-item>
+                <a-form-item :colon="false" labelAlign="left" label="Group size">
+                    <a-space>
+                        <a-input-number v-model:value="tour.doc.min_people" :min="1" :max="20" addon-before="min" />
+                        <a-input-number v-model:value="tour.doc.max_people" :min="1" :max="20" addon-before="max" />
+                    </a-space>
+                </a-form-item>
+                <a-form-item :colon="false" labelAlign="left" label="Total Distance">
+                    <a-input-number v-model:value="tour.doc.total_distance" addon-after="km"
+                        class="!w-full"></a-input-number>
+                </a-form-item>
+
+
             </a-form>
         </div>
         <div class="flex-1 p-2">

@@ -1,40 +1,42 @@
 {
  "actions": [],
- "autoname": "field:destination_name",
- "creation": "2025-10-08 17:35:47.997351",
+ "allow_rename": 1,
+ "autoname": "field:attraction_name",
+ "creation": "2025-10-15 15:45:27.402241",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "destination_name",
-  "description",
-  "images"
+  "attraction_name",
+  "type",
+  "destination"
  ],
  "fields": [
   {
-   "fieldname": "destination_name",
+   "fieldname": "attraction_name",
    "fieldtype": "Data",
-   "label": "Destination Name",
+   "label": "Attraction Name",
    "unique": 1
   },
   {
-   "fieldname": "description",
-   "fieldtype": "Long Text",
-   "label": "Description"
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "type",
+   "options": "Monastery\nMuseum\nPhoto Site\nMonument"
   },
   {
-   "fieldname": "images",
-   "fieldtype": "Table",
-   "label": "images",
-   "options": "Destination Images"
+   "fieldname": "destination",
+   "fieldtype": "Link",
+   "label": "Destination",
+   "options": "Destination"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-15 12:47:23.029890",
+ "modified": "2025-10-15 15:53:05.602059",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
- "name": "Destination",
+ "name": "Attraction",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

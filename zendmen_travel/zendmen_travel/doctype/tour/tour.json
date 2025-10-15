@@ -6,12 +6,13 @@
  "engine": "InnoDB",
  "field_order": [
   "tour_name",
-  "category",
-  "grades",
+  "sub_title",
+  "difficulty",
   "column_break_gprp",
+  "total_distance",
+  "min_people",
+  "max_people",
   "duration",
-  "image",
-  "tour_nights",
   "section_break_yczy",
   "activities",
   "accomodation",
@@ -33,17 +34,6 @@
    "label": "Duration"
   },
   {
-   "fieldname": "category",
-   "fieldtype": "Table MultiSelect",
-   "label": "Category",
-   "options": "Tour Category Child"
-  },
-  {
-   "fieldname": "image",
-   "fieldtype": "Attach Image",
-   "label": "Image"
-  },
-  {
    "fieldname": "section_break_yczy",
    "fieldtype": "Section Break"
   },
@@ -60,30 +50,43 @@
    "options": "Tour Accomodation"
   },
   {
-   "fieldname": "grades",
-   "fieldtype": "Table MultiSelect",
-   "label": "Grades",
-   "options": "Tour Grade Child"
-  },
-  {
    "fieldname": "images",
    "fieldtype": "Table",
    "label": "Images",
    "options": "Tour Images"
   },
   {
-   "fieldname": "tour_nights",
-   "fieldtype": "Table",
-   "label": "tour nights",
-   "options": "tour nights"
+   "fieldname": "sub_title",
+   "fieldtype": "Small Text",
+   "label": "Sub Title"
+  },
+  {
+   "fieldname": "total_distance",
+   "fieldtype": "Int",
+   "label": "Total Distance"
+  },
+  {
+   "fieldname": "min_people",
+   "fieldtype": "Int",
+   "label": "Min People"
+  },
+  {
+   "fieldname": "max_people",
+   "fieldtype": "Int",
+   "label": "Max People"
+  },
+  {
+   "fieldname": "difficulty",
+   "fieldtype": "Select",
+   "label": "Difficulty",
+   "options": "Easy-Moderate"
   }
  ],
  "grid_page_length": 50,
- "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
  "make_attachments_public": 1,
- "modified": "2025-10-14 18:45:17.341857",
+ "modified": "2025-10-15 17:04:19.572220",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Tour",

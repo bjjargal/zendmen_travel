@@ -6,7 +6,9 @@
  "engine": "InnoDB",
  "field_order": [
   "activity_name",
-  "cost"
+  "cost",
+  "destination_child",
+  "description"
  ],
  "fields": [
   {
@@ -19,12 +21,23 @@
    "fieldname": "cost",
    "fieldtype": "Currency",
    "label": "Cost"
+  },
+  {
+   "fieldname": "destination_child",
+   "fieldtype": "Table MultiSelect",
+   "label": "Destination Child",
+   "options": "Destination Child"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-14 16:41:31.936145",
+ "modified": "2025-10-15 16:42:27.922464",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Activity",
