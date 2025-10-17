@@ -29,6 +29,11 @@ const routes = [
     component: () => import('@/pages/DestinationList.vue'),
   },
   {
+    path: '/test/',
+    name: 'test',
+    component: () => import('@/pages/test.vue'),
+  },
+  {
     path: '/tour/:name?',
     name: 'Tour',
     props: true,

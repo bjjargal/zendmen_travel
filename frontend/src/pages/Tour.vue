@@ -14,7 +14,7 @@
                     <a-input type="text" v-model:value="tour.doc.tour_name" />
                 </a-form-item>
                 <a-form-item :colon="false" labelAlign="left" label="Subtitle">
-                    <a-textarea v-model:value="tour.doc.sub_title" :row="6" />
+                    <a-textarea v-model:value="tour.doc.sub_title" :rows="6" />
                 </a-form-item>
                 <a-form-item :colon="false" labelAlign="left" label="Duration">
                     <a-input-number class="!w-full" v-model:value="tour.doc.duration" :min="1" :max="20"
@@ -33,49 +33,75 @@
                     <a-input-number v-model:value="tour.doc.total_distance" addon-after="km"
                         class="!w-full"></a-input-number>
                 </a-form-item>
-
-
             </a-form>
         </div>
         <div class="flex-1 p-2">
             <a-form layout="vertical" class="">
                 <a-form-item :colon="false" labelAlign="left">
                     <a-tabs class="" v-model:activeKey="current" tab-position="top" type="card">
-                        <a-tab-pane v-for="day in tour.doc.duration" :key="day" :tab='day'>
-                            <div class="grid grid-cols-3 gap-2">
-                                <a-form-item v-if="destinationOptions.length > 0" :colon="false" labelAlign=""
-                                    label="Destination">
-                                    <a-select :options="destinationOptions" v-model:value="accomDestination"
-                                        :loading="destinations.list.loading" show-search :filter-option="filterOption"
+                        <a-tab-pane v-for="day in tour.doc.duration" :key="day" :tab="`Day ${day}`">
+                            <div v-for="(a, idx) in tour.doc.accomodation.filter(acc => acc.day === day)" :key="idx"
+                                class="!grid grid-cols-4 gap-2">
+                                <a-form-item label="title">
+                                    <a-input type="text" v-model:value="a.title" />
+                                </a-form-item>
+                                <a-form-item label="Destination">
+                                    <a-select :options="destinationOptions" v-model:value="a.destination" allow-clear />
+                                </a-form-item>
+                                <a-form-item label="Difficulty">
+                                    <a-select :options="difficultyOptions" v-model:value="a.difficulty" allow-clear />
+                                </a-form-item>
+                                <a-form-item label="Accomodation">
+                                    <a-select :options="accomodationOptions" v-model:value="a.accomodation"
                                         allow-clear />
                                 </a-form-item>
-                                <a-form-item :colon="false" labelAlign="" label="Tour Accomodation">
-                                    <a-select :options="[{
-    label: 'Camping',
-    value: 'Camping'
-}, {
-    label: 'Hotel',
-    value: 'Hotel'
-    }]" v-model:value="accomType" />
+                                <a-form-item label="Distance">
+                                    <a-input-number v-model:value="a.distance" allow-clear class="!w-full"
+                                        addon-after="km" />
                                 </a-form-item>
-                                <a-form-item :colon="false" labelAlign="" label="Price">
-                                    <a-input-number class="!w-full" v-model:value="accomPrice" />
+                                <a-form-item label="Drive Time">
+                                    <a-input-number v-model:value="a.drive_time" allow-clear class="!w-full"
+                                        addon-after="hours" />
+                                </a-form-item>
+                                <a-form-item label="Terrain">
+                                    <a-select :options="terrainOptions" v-model:value="a.terrain" allow-clear />
+                                </a-form-item>
+                                <a-form-item label="Altitude">
+                                    <a-input-number v-model:value="a.altitude" allow-clear class="!w-full"
+                                        addon-after="km" />
+                                </a-form-item>
+                                <a-form-item label="Meals" class="">
+                                    <a-space direction="vertical">
+                                        <a-checkbox :checked="!!a.breakfast"
+                                            @update:checked="a.breakfast = !a.breakfast">Breakfast</a-checkbox>
+                                        <a-checkbox :checked="!!a.lunch"
+                                            @update:checked="a.lunch = !a.lunch">Lunch</a-checkbox>
+                                        <a-checkbox :checked="!!a.dinner"
+                                            @update:checked="a.dinner = !a.dinner">Dinner</a-checkbox>
+                                    </a-space>
+                                </a-form-item>
+                                <a-form-item label="Activities" class="">
+                                    <a-checkbox-group v-model:value="dayActivity"
+                                        :options="getActivityOptions(a.destination)" />
                                 </a-form-item>
                             </div>
-                            <a-table :dataSource="tableData" :columns="columns" row-key="name" bordered size="small"
-                                :pagination="false" :locale="{ emptyText: 'Мэдээлэл байхгүй байна' }">
-                                <template #bodyCell="{ column, record }">
-                                    <template v-if="column.dataIndex === 'activity_name'">
-                                        <a-select v-model:value="record.activity_name"
-                                            :options="activityOptions"></a-select>
+                            <a-form-item label="Notes">
+                                <a-table :columns="noteColumns" :pagination="false" :data-source="notes" size="small">
+                                    <template #bodyCell="{ column, record }">
+                                        <template v-if="column.dataIndex === 'note'">
+                                            <a-textarea :rows="1" v-model:value="record.note" />
+                                            {{ record.node }}
+                                        </template>
+                                        <template v-else>
+                                            <div class="flex gap-2">
+                                                <a-button @click="deleteNote(record)" danger
+                                                    size="small">Delete</a-button>
+                                            </div>
+                                        </template>
                                     </template>
-                                    <template v-else-if="column.dataIndex === 'cost'">
-                                        <a-input-number v-model:value="record.cost" class="!w-full" />
-                                    </template>
-                                </template>
-                            </a-table>
-                            <a-button class="mt-2" @click="addActivity(day)">Add activity</a-button>
-
+                                </a-table>
+                                <a-button class="mt-2" @click="addNote">add note</a-button>
+                            </a-form-item>
                         </a-tab-pane>
                     </a-tabs>
                 </a-form-item>
@@ -84,14 +110,12 @@
     </div>
 </template>
 <script setup>
-import { createDocumentResource, FileUploader } from 'frappe-ui';
-import { ref, computed, onMounted } from 'vue';
+import { createDocumentResource } from 'frappe-ui';
+import { ref, computed, watch } from 'vue';
 import { DestinationStore } from '@/data/destinations';
 import { ActivityStore } from '@/data/Activities';
 import { message } from 'ant-design-vue';
-
-
-
+import { ActivityDesStore } from '@/data/ActivityDestination';
 const props = defineProps({
     name: {
         type: String,
@@ -99,15 +123,10 @@ const props = defineProps({
     }
 });
 
-const isDataLoaded = ref(false);
 const { destinations } = DestinationStore();
 const { activities } = ActivityStore()
+const { activitiesDes } = ActivityDesStore()
 
-
-
-const filterOption = (input, option) => {
-    return option.label.toLowerCase().includes(input.toLowerCase())
-}
 const destinationOptions = computed(() => {
     return destinations?.data?.map(d => ({
         value: d.name,
@@ -115,96 +134,132 @@ const destinationOptions = computed(() => {
     })) || []
 })
 
-const activityOptions = computed(() => {
-    return activities?.data?.map(d => ({
-        value: d.name,
-        label: d.activity_name
-    })) || []
-})
+const noteColumns = [
+    { title: 'Note', dataIndex: 'note' },
+    { title: 'Action', dataIndex: 'Action', key: 'Action' }
+]
 
+const difficultyOptions = [
+    { value: 'Easy', },
+    { value: 'Moderate', },
+    { value: 'Challenging' }
+]
 
+const accomodationOptions = [
+    { value: 'Camping' },
+    { value: 'Hotel' },
+    { value: 'Ger Camp' }
+]
 
+const terrainOptions = [
+    { value: "Paved roads" },
+    { value: "Paved & gravel" },
+    { value: "Mixed paved & dirt" },
+    { value: "Desert tracks" },
+    { value: "Mountain roads" }
+]
 
 const tour = createDocumentResource({
     doctype: 'Tour',
     name: props.name,
     auto: true
 });
-console.log(tour.doc)
+console.log(activitiesDes.data)
 
+const getActivityOptions = (destination) => {
+    return activitiesDes?.data[destination] || []
+}
 
-const handleFileUpload = (file) => {
-    tour.doc.image = file.file_url;
-};
-
-const columns = [
-    {
-        title: 'Activity Name',
-        dataIndex: 'activity_name',
+const dayActivity = computed({
+    get() {
+        const dayacts = tour.doc.activities?.filter(n => n.day === current.value) || []
+        return dayacts.map(a => a.activity_name)
     },
-    {
-        title: 'Cost',
-        dataIndex: 'cost',
-    },
-];
+    set(newNames) {
+        if (!Array.isArray(tour.doc.activities)) {
+            tour.doc.activities = []
+        }
+
+        const currentDay = current.value
+        const existingActivities = tour.doc.activities.filter(n => n.day === currentDay)
+        const existingNames = existingActivities.map(a => a.activity_name)
+
+        // 1️⃣ Add new checked ones
+        newNames.forEach(name => {
+            if (!existingNames.includes(name)) {
+                tour.doc.activities.push({
+                    day: currentDay,
+                    activity_name: name,
+                    parent: tour.doc.name,
+                    parenttype: 'Tour',
+                    parentfield: 'activities',
+                })
+            }
+        })
+
+        // 2️⃣ Remove unchecked ones
+        tour.doc.activities = tour.doc.activities.filter(a => {
+            if (a.day !== currentDay) return true // keep other days
+            return newNames.includes(a.activity_name) // keep only checked ones
+        })
+    }
+})
+
+
+
 
 const current = ref(1);
-
-const updateAccomodation = (field, value) => {
-    let accomArray = tour.doc.accomodation || [];
-    let index = accomArray.findIndex(a => a.day === current.value);
-    let entry = index >= 0 ? { ...accomArray[index] } : { day: current.value };
-    entry[field] = value;
-    if (index >= 0) {
-        accomArray[index] = entry;
-    } else {
-        accomArray.push(entry);
-    }
-    tour.doc.accomodation = accomArray;
-};
-
-const accomDestination = computed({
-    get() {
-        const acts = tour.doc.accomodation?.filter(a => a.day === current.value) || [];
-        return acts.length > 0 ? acts[0].destination : '';
+watch(
+    () => tour?.doc?.duration,
+    (duration) => {
+        for (let i = 1; i <= duration; i++) {
+            const exists = tour.doc.accomodation.some(a => a.day === i)
+            if (!exists) {
+                tour.doc.accomodation.push({
+                    day: i,
+                    title: '',
+                    destination: null,
+                    difficulty: null,
+                    accomodation: null,
+                    distance: null,
+                    drive_time: null,
+                    terrain: null,
+                    altitude: null,
+                    parent: tour.doc.name,       // 👈 important
+                    parenttype: 'Tour',          // 👈 important
+                    parentfield: 'accomodation', // 👈 important
+                    doctype: 'Tour Accomodation' // 👈 child table doctype
+                })
+            }
+        }
     },
-    set(value) {
-        updateAccomodation('destination', value);
-    }
-});
+    { immediate: true }
+)
 
-const accomType = computed({
-    get() {
-        const acts = tour.doc.accomodation?.filter(a => a.day === current.value) || [];
-        return acts.length > 0 ? acts[0].accomodation : '';
-    },
-    set(value) {
-        updateAccomodation('accomodation', value);
-    }
-});
+const notes = computed(() => {
+    return tour.doc.notes?.filter(n => n.day === current.value) || []
+})
 
-const accomPrice = computed({
-    get() {
-        const acts = tour.doc.accomodation?.filter(a => a.day === current.value) || [];
-        return acts.length > 0 ? acts[0].price : 0;
-    },
-    set(value) {
-        updateAccomodation('price', value);
-    }
-});
-
-const tableData = computed(() => {
-    return tour.doc.activities?.filter(activity => activity.day === current.value) || [];
-});
-
-const addActivity = (day) => {
-    tour.doc.activities.push({
-        day: day,
-        activity_name: '',
-        cost: 0
-
+const addNote = () => {
+    tour.doc.notes.push({
+        day: current.value,
+        note: '',
+        parent: tour.doc.name,       // 👈 Add for child table
+        parenttype: 'Tour',          // 👈 Add for child table
+        parentfield: 'notes',        // 👈 Add for child table (adjust if field name differs)
+        doctype: 'Tour Note'         // 👈 Add: replace with actual child doctype (e.g., 'Tour Note')
     })
 }
+const deleteNote = (note) => {
+    if (!tour.doc.notes || !Array.isArray(tour.doc.notes)) return
+    if (note.name) {
+        tour.doc.notes = tour.doc.notes.filter(n => n.name !== note.name)
+    } else {
+        tour.doc.notes = tour.doc.notes.filter(n => n !== note)
+    }
+    message.success('Note deleted')
+}
+
 
 
 const saveDoc = async () => {
@@ -216,10 +271,4 @@ const saveDoc = async () => {
         message.error(error.message, 2)
     }
 }
-
-onMounted(async () => {
-    await destinations.list.promise;
-    await activities.list.promise;
-    isDataLoaded.value = true;
-});
 </script>

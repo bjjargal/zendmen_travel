@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "day",
+  "destination",
   "title",
   "difficulty",
   "accomodation",
@@ -14,9 +15,10 @@
   "breakfast",
   "lunch",
   "dinner",
-  "destination",
-  "price",
-  "description"
+  "distance",
+  "drive_time",
+  "terrain",
+  "altitude"
  ],
  "fields": [
   {
@@ -30,7 +32,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Accomodation",
-   "options": "Camping\nHotel"
+   "options": "Camping\nHotel\nGer Camp"
   },
   {
    "fieldname": "destination",
@@ -40,20 +42,9 @@
    "options": "Destination"
   },
   {
-   "fieldname": "price",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Price"
-  },
-  {
    "fieldname": "title",
    "fieldtype": "Data",
    "label": "title"
-  },
-  {
-   "fieldname": "description",
-   "fieldtype": "Long Text",
-   "label": "Description"
   },
   {
    "fieldname": "hotel_star",
@@ -83,13 +74,34 @@
    "fieldtype": "Select",
    "label": "Difficulty",
    "options": "Easy\nModerate\nChallenging"
+  },
+  {
+   "fieldname": "distance",
+   "fieldtype": "Int",
+   "label": "Distance"
+  },
+  {
+   "fieldname": "drive_time",
+   "fieldtype": "Int",
+   "label": "Drive Time"
+  },
+  {
+   "fieldname": "terrain",
+   "fieldtype": "Select",
+   "label": "Terrain",
+   "options": "Paved roads\nPaved & gravel\nMixed paved & dirt\nDesert tracks\nMountain roads"
+  },
+  {
+   "fieldname": "altitude",
+   "fieldtype": "Int",
+   "label": "Altitude"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-15 17:18:32.884010",
+ "modified": "2025-10-15 17:29:48.102405",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Tour Accomodation",

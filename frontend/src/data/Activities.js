@@ -4,7 +4,7 @@ import { ref } from 'vue';
 export const ActivityStore = defineStore('ActivityStore', () => {
     const activities = createListResource({
         doctype: 'Activity',
-        fields: ['name', 'activity_name', 'cost', 'destination_child'],
+        fields: ['name', 'activity_name', 'cost', 'description'],
         cache: 'ActivityCache',
         auto: true,
         pageLength: 999,
