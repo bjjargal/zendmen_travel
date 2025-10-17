@@ -11,13 +11,15 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "copy-html-entry": "cp ../zendmen_travel/public/frontend/index.html ../zendmen_travel/www/frontend.html"
+    "copy-html-entry": "cp ../zendmen_travel/public/frontend/index.html ../zendmen_travel/www/zendmen.html"
   },
   "dependencies": {
     "ant-design-vue": "4.x",
     "feather-icons": "^4.29.2",
     "frappe-ui": "^0.1.192",
+    "html2canvas": "^1.4.1",
     "jspdf": "^3.0.3",
+    "pdfjs-dist": "^5.4.296",
     "pinia": "^3.0.3",
     "socket.io-client": "^4.7.2",
     "vue": "^3.5.13",

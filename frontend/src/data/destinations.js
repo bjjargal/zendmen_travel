@@ -8,7 +8,7 @@ export const DestinationStore = defineStore('destinationStore', () => {
     const destinations = createListResource({
         doctype: 'Destination',
         cache: "destinationsCache",
-        fields: ['name', 'destination_name'],
+        fields: ['name', 'destination_name', 'image', 'description'],
         auto: true,
         pageLength: 999,
         onSuccess(data) {

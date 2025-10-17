@@ -1,60 +1,84 @@
 <template>
     <div class="p-4">
-        <a-button type="primary" @click="generatePDF">Download Tour PDF</a-button>
+        <h2 class="text-2xl font-bold mb-4">PDF Demo Component</h2>
+
+        <!-- Button to generate PDF -->
+        <button class="px-4 py-2 bg-blue-600 text-white rounded mb-4" @click="generatePDF">
+            Generate PDF
+        </button>
+
+        <!-- Optional: Show PDF inline via object/embed -->
+        <div v-if="pdfUrl" class="mt-4">
+            <h3 class="font-semibold mb-2">PDF Preview:</h3>
+            <object :data="pdfUrl" type="application/pdf" width="100%" height="600px">
+                <p>
+                    PDF preview not available. <a :href="pdfUrl" target="_blank">Download PDF</a>
+                </p>
+            </object>
+        </div>
+
+        <!-- The component content to convert to PDF -->
+        <div ref="pdfContent" id="pdfContent" class="p-4 border border-gray-300 rounded mt-4 bg-white">
+            <h1 class="text-xl font-bold mb-2">Hello, Vue 3 PDF!</h1>
+            <p>
+                This content will be captured and converted to a PDF. You can include
+                images, text, and any HTML/CSS styling.
+            </p>
+            <ul class="list-disc pl-5 mt-2">
+                <li>Item 1</li>
+                <li>Item 2</li>
+                <li>Item 3</li>
+            </ul>
+            <!-- <img class="mt-2" src="https://via.placeholder.com/200" alt="Example" /> -->
+        </div>
     </div>
 </template>
 
 <script setup>
-import { jsPDF } from "jspdf"
+import { ref, nextTick } from 'vue';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
-const generatePDF = () => {
-    const doc = new jsPDF("p", "pt", "a4")
+const pdfContent = ref(null);
+const pdfUrl = ref('');
 
-    // 🏕 Logo
-    const logoUrl = "/logo.png" // put your logo in /public or import it
-    doc.addImage(logoUrl, "PNG", 260, 30, 80, 40)
+const generatePDF = async () => {
+    if (!pdfContent.value) return;
 
-    // 🧭 Title
-    doc.setFont("helvetica", "bold")
-    doc.setFontSize(18)
-    doc.text("ZENDMEN TRAVEL MONGOLIA", 50, 70)
+    // Wait for next DOM update to ensure element exists
+    await nextTick();
 
-    doc.setFontSize(20)
-    doc.text("Mongolia Adventure Tour", 50, 120)
+    try {
+        // Convert the HTML content to canvas
+        const canvas = await html2canvas(pdfContent.value, { scale: 2 });
 
-    // 📝 Description
-    doc.setFont("helvetica", "normal")
-    doc.setFontSize(12)
-    const description =
-        "An unforgettable journey through Mongolia's diverse landscapes, from the bustling capital to remote desert dunes and majestic mountain ranges. Experience authentic nomadic culture, ancient traditions, and breathtaking natural wonders."
-    doc.text(doc.splitTextToSize(description, 500), 50, 150)
+        // Convert canvas to image
+        const imgData = canvas.toDataURL('image/png');
 
-    // 🧾 Details boxes
-    const details = [
-        { label: "Duration", value: "5 Days" },
-        { label: "Total Distance", value: "1,370 km" },
-        { label: "Group Size", value: "2–12 people" },
-        { label: "Difficulty", value: "Easy–Moderate" },
-    ]
+        // Create jsPDF instance
+        const pdf = new jsPDF('p', 'mm', 'a4');
 
-    let y = 250
-    details.forEach((item) => {
-        // draw box
-        doc.setDrawColor(230)
-        doc.setLineWidth(1)
-        doc.roundedRect(50, y, 500, 40, 6, 6)
-        // text
-        doc.setTextColor(120)
-        doc.setFontSize(10)
-        doc.text(item.label, 70, y + 15)
-        doc.setTextColor(0)
-        doc.setFontSize(14)
-        doc.setFont("helvetica", "bold")
-        doc.text(item.value, 70, y + 32)
-        y += 60
-    })
+        // Calculate width/height to fit A4
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-    // ✅ Save or preview
-    doc.save("Mongolia-Adventure-Tour.pdf")
-}
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+        // Convert to Blob and create object URL
+        const blob = pdf.output('blob');
+        pdfUrl.value = URL.createObjectURL(blob);
+
+        // Optional: Open PDF in new tab
+        // window.open(pdfUrl.value);
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+    }
+};
 </script>
+
+<style scoped>
+/* Optional styling for demo */
+#pdfContent {
+    background-color: #fff;
+}
+</style>

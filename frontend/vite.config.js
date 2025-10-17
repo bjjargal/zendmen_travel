@@ -11,7 +11,7 @@ export default defineConfig({
 			jinjaBootData: true,
 			lucideIcons: true,
 			buildConfig: {
-				indexHtmlPath: "../zendmen_travel/www/frontend.html",
+				indexHtmlPath: "../zendmen_travel/www/zendmen.html",
 				emptyOutDir: true,
 				sourcemap: true,
 			},

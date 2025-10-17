@@ -243,4 +243,11 @@ app_license = "mit"
 # }
 
 
-website_route_rules = [{'from_route': '/frontend/<path:app_path>', 'to_route': 'frontend'},]
+# website_route_rules = [{'from_route': '/frontend/<path:app_path>', 'to_route': 'frontend'},]
+website_route_rules = [
+    {"from_route": "/zendmen/<path:app_path>", "to_route": "zendmen"},
+]
+website_redirects = [
+    {"source": "login", "target": "/zendmen/login"},
+    {"source": "/", "target": "/zendmen/login"},
+]

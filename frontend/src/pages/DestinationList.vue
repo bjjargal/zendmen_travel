@@ -88,7 +88,7 @@
         </a-form>
 
         <!-- Images Section -->
-        <div v-if="formModel.images?.length" class="mt-4">
+        <!-- <div v-if="formModel.images?.length" class="mt-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">Images</label>
             <div class="grid grid-cols-2 gap-2">
                 <div v-for="(image, index) in formModel.images" :key="image.image"
@@ -98,35 +98,29 @@
                         class="text-xs" />
                 </div>
             </div>
-        </div>
-
-        <!-- Add Image -->
-        <div class="grid grid-cols-2 gap-2 mt-4">
-            <a-button type="dashed" class="col-span-2 !flex justify-center items-center" @click="imageOpen = true">
-                <FeatherIcon name="plus" class="size-8 mr-2" /> Add Image
-            </a-button>
-        </div>
+        </div> -->
+        <FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false" @success="handleFileUpload">
+            <template #default="{ openFileSelector }">
+                <div class="rounded overflow-hidden cursor-pointer" @click="openFileSelector">
+                    <img v-if="formModel?.image" :src="formModel.image" alt="preview"
+                        class="w-full h-auto object-cover" />
+                    <div v-else
+                        class="w-full border rounded border-dotted hover:border-blue-500 flex justify-center h-40 items-center bg-gray-50">
+                        Upload Image
+                    </div>
+                </div>
+            </template>
+        </FileUploader>
 
         <!-- Image Upload Modal -->
-        <a-modal v-model:open="imageOpen" title="New destination image" @ok="handleImage" @cancel="imageOpen = false">
+        <!-- <a-modal v-model:open="imageOpen" title="New destination image" @ok="handleImage" @cancel="imageOpen = false">
             <a-form :form="imageFormRef" :model="newImageForm" :rules="imageFormRules" layout="vertical">
                 <a-form-item label="Title" name="title">
                     <a-input v-model:value="newImageForm.title" placeholder="Enter title" />
                 </a-form-item>
             </a-form>
-            <FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false" @success="handleFileUpload">
-                <template #default="{ openFileSelector }">
-                    <div class="rounded overflow-hidden cursor-pointer" @click="openFileSelector">
-                        <img v-if="newImageForm.image" :src="newImageForm.image" alt="preview"
-                            class="w-full h-40 object-cover" />
-                        <div v-else
-                            class="w-full border rounded border-dotted hover:border-blue-500 flex justify-center h-40 items-center bg-gray-50">
-                            Upload Image
-                        </div>
-                    </div>
-                </template>
-            </FileUploader>
-        </a-modal>
+            
+        </a-modal> -->
 
         <a-modal v-model:open="attractionOpen" title="Add Attraction" @ok="handleSaveAttraction"
             :loading="attractionSaving" @cancel="handleCancelAttraction">
@@ -341,11 +335,11 @@ const deleteAttraction = async (name) => {
 }
 
 // IMAGE HANDLERS
-const handleFileUpload = (file) => (newImageForm.image = file.file_url)
-const handleImage = () => {
-    formModel.value.images.push({ title: newImageForm.title, image: newImageForm.image })
-    Object.assign(newImageForm, { title: '', image: '' })
-    imageOpen.value = false
-    message.success('Image added')
-}
+const handleFileUpload = (file) => (formModel.value.image = file.file_url)
+// const handleImage = () => {
+//     formModel.value.images.push({ title: newImageForm.title, image: newImageForm.image })
+//     Object.assign(newImageForm, { title: '', image: '' })
+//     imageOpen.value = false
+//     message.success('Image added')
+// }
 </script>

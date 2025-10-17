@@ -4,11 +4,8 @@
       <div
         class="w-full max-w-md bg-white/95  backdrop-blur-sm rounded-xl shadow-2xl p-8 transition-all duration-300 hover:shadow-2xl relative">
         <div class="">
-          <p class="text-lg font-bold mb-2 text-center erp-color">
-            Zendmen Travel
-          </p>
           <div class="flex justify-center mb-8">
-            <img class="h-58" src="@/assets/images/erplogo.png" :alt="'LOGO'" />
+            <img class="h-40" src="@/assets/images/zlogo.png" :alt="'LOGO'" />
           </div>
         </div>
         <a-form :model="form" name="basic" @submit="submit">
@@ -37,10 +34,6 @@
             </a-button>
           </a-form-item>
         </a-form>
-        <div class="flex justify-center items-center gap-2 p-1">
-          <span class="font-bold text-lg tracking-tighter leading-none">Powered by</span>
-          <img src="@/assets/images/powered-by.png" alt="Powered by" class="h-6 sm:h-9" />
-        </div>
       </div>
     </div>
 

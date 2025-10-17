@@ -1,6 +1,9 @@
 <template>
     <a-page-header class="!p-0 !mb-2" :title="tour?.doc?.tour_name || 'tour'" @back="() => $router.go(-1)">
         <template #extra>
+            <a-button @click="pdfOpen = true" :loading="false" type="dashed">
+                show pdf
+            </a-button>
             <a-button @click="saveDoc()" :loading="!!tour?.save?.loading" type="primary">
                 Save
             </a-button>
@@ -84,6 +87,10 @@
                                     <a-checkbox-group v-model:value="dayActivity"
                                         :options="getActivityOptions(a.destination)" />
                                 </a-form-item>
+                                <a-form-item label="Attractions" class="">
+                                    <a-checkbox-group v-model:value="dayAttraction"
+                                        :options="getAttractionOptions(a.destination)" />
+                                </a-form-item>
                             </div>
                             <a-form-item label="Notes">
                                 <a-table :columns="noteColumns" :pagination="false" :data-source="notes" size="small">
@@ -108,14 +115,24 @@
             </a-form>
         </div>
     </div>
+    <a-modal v-model:open="pdfOpen" title="" width="60%" @ok="downloadPDF">
+        <div ref="pdfContent">
+            <tourPDF :tour="tour" />
+        </div>
+    </a-modal>
 </template>
 <script setup>
 import { createDocumentResource } from 'frappe-ui';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 import { DestinationStore } from '@/data/destinations';
 import { ActivityStore } from '@/data/Activities';
 import { message } from 'ant-design-vue';
 import { ActivityDesStore } from '@/data/ActivityDestination';
+import { AttractionsStore } from '../data/Attraction';
+import tourPDF from '../components/tourPDF.vue';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 const props = defineProps({
     name: {
         type: String,
@@ -126,6 +143,8 @@ const props = defineProps({
 const { destinations } = DestinationStore();
 const { activities } = ActivityStore()
 const { activitiesDes } = ActivityDesStore()
+const { attractions } = AttractionsStore()
+
 
 const destinationOptions = computed(() => {
     return destinations?.data?.map(d => ({
@@ -170,6 +189,48 @@ const getActivityOptions = (destination) => {
     return activitiesDes?.data[destination] || []
 }
 
+
+const getAttractionOptions = (destination) => {
+    return attractions.data
+        .filter(item => item.destination === destination)
+        .map(item => item.name);
+}
+const dayAttraction = computed({
+    get() {
+        const dayatt = tour.doc.attractions?.filter(n => n.day === current.value) || []
+        return dayatt.map(a => a.attraction)
+    },
+    set(newNames) {
+        if (!Array.isArray(tour.doc.attractions)) {
+            tour.doc.attractions = []
+        }
+
+        const currentDay = current.value
+        const existingattractions = tour.doc.attractions.filter(n => n.day === currentDay)
+        const existingNames = existingattractions.map(a => a.attraction)
+
+        // 1️⃣ Add new checked ones
+        newNames.forEach(name => {
+            if (!existingNames.includes(name)) {
+                tour.doc.attractions.push({
+                    day: currentDay,
+                    attraction: name,
+                    parent: tour.doc.name,
+                    parenttype: 'Tour',
+                    parentfield: 'attractions',
+                })
+            }
+        })
+
+        // 2️⃣ Remove unchecked ones
+        tour.doc.attractions = tour.doc.attractions.filter(a => {
+            if (a.day !== currentDay) return true // keep other days
+            return newNames.includes(a.attraction) // keep only checked ones
+        })
+    }
+})
+
+
 const dayActivity = computed({
     get() {
         const dayacts = tour.doc.activities?.filter(n => n.day === current.value) || []
@@ -204,8 +265,6 @@ const dayActivity = computed({
         })
     }
 })
-
-
 
 
 const current = ref(1);
@@ -244,10 +303,10 @@ const addNote = () => {
     tour.doc.notes.push({
         day: current.value,
         note: '',
-        parent: tour.doc.name,       // 👈 Add for child table
-        parenttype: 'Tour',          // 👈 Add for child table
-        parentfield: 'notes',        // 👈 Add for child table (adjust if field name differs)
-        doctype: 'Tour Note'         // 👈 Add: replace with actual child doctype (e.g., 'Tour Note')
+        parent: tour.doc.name,
+        parenttype: 'Tour',
+        parentfield: 'notes',
+        doctype: 'Tour Note'
     })
 }
 const deleteNote = (note) => {
@@ -271,4 +330,65 @@ const saveDoc = async () => {
         message.error(error.message, 2)
     }
 }
+const pdfOpen = ref(false);
+const pdfContent = ref(null);
+
+
+const downloadPDF = async () => {
+    try {
+        const el = pdfContent.value;
+        if (!el) {
+            console.error('No element found for PDF');
+            return;
+        }
+
+        // Wait for DOM to fully render
+        await nextTick();
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // Render element to canvas
+        const canvas = await html2canvas(el, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            scrollY: -window.scrollY,
+            backgroundColor: '#ffffff',
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+
+        const pdf = new jsPDF('p', 'pt', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        const margin = 40;
+        const usableWidth = pageWidth - margin * 2;
+        const imgHeight = (canvas.height * usableWidth) / canvas.width;
+
+        let heightLeft = imgHeight;
+        let position = margin;
+
+        // Add first page
+        pdf.addImage(imgData, 'PNG', margin, position, usableWidth, imgHeight);
+        heightLeft -= pageHeight - margin * 2;
+
+        // Add remaining pages
+        while (heightLeft > 0) {
+            pdf.addPage();
+            position = heightLeft - imgHeight + margin;
+            pdf.addImage(imgData, 'PNG', margin, position, usableWidth, imgHeight);
+            heightLeft -= pageHeight - margin * 2;
+        }
+
+        pdf.save(`${tour.doc.tour_name || 'Tour'}.pdf`);
+    } catch (err) {
+        console.error('❌ PDF generation failed:', err);
+    }
+};
+
+
+
+
+
 </script>
+

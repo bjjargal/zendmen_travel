@@ -1,0 +1,2 @@
+import{M as a,G as i}from"./index-DDp1eRUk.js";const r=a("destinationStore",()=>{var e=[];return{destinations:i({doctype:"Destination",cache:"destinationsCache",fields:["name","destination_name","image","description"],auto:!0,pageLength:999,onSuccess(n){e.value=n.map(t=>({value:t.name,label:t.destination_name}))}}),destinationOptions:e}});export{r as D};
+//# sourceMappingURL=destinations-4f1sDCIz.js.map
