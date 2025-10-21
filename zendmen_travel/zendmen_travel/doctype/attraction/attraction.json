@@ -8,7 +8,8 @@
  "field_order": [
   "attraction_name",
   "type",
-  "destination"
+  "destination",
+  "description"
  ],
  "fields": [
   {
@@ -28,12 +29,17 @@
    "fieldtype": "Link",
    "label": "Destination",
    "options": "Destination"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-15 15:53:05.602059",
+ "modified": "2025-10-21 13:16:58.662447",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Attraction",

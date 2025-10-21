@@ -32,7 +32,7 @@
         </template>
     </a-table>
     <a-modal v-model:open="open" :title="isCreate ? 'Create Activity' : `Activity: ${formModel?.activity_name || ''}`"
-        @ok="handleSave" :loading="saving" @cancel="handleCancel">
+        okText='Save' @ok="handleSave" :loading="saving" @cancel="handleCancel">
         <a-form :form="createFormRef" :model="formModel" :rules="formRules" layout="vertical">
             <a-form-item label="Activity Name" name="activity_name">
                 <a-input v-model:value="formModel.activity_name" placeholder="Enter activity name" />

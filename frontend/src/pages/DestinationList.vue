@@ -29,7 +29,7 @@
     </a-table>
 
     <!-- Destination Modal -->
-    <a-modal v-model:open="open" width="50%" :title="`Destination: ${formModel?.destination_name || ''}`"
+    <a-modal v-model:open="open" width="50%" :title="`Destination: ${formModel?.destination_name || ''}`" okText='Save'
         @ok="handleSave" :loading="saving" @cancel="handleCancel">
         <a-form :form="createFormRef" :model="formModel" :rules="formRules" layout="vertical">
             <a-form-item label="Destination Name" name="destination_name">
@@ -45,7 +45,7 @@
                 <a-table :columns="attractionColumns" :data-source="filteredAttractions" size="small"
                     :loading="attractions.list.loading" :pagination="false" row-key="name">
                     <template #bodyCell="{ column, record }">
-                        <template v-if="['attraction_name', 'type'].includes(column.dataIndex)">
+                        <template v-if="['attraction_name', 'type', 'description'].includes(column.dataIndex)">
                             <div>
                                 <a-input v-if="editableData[record.name] && column.dataIndex === 'attraction_name'"
                                     v-model:value="editableData[record.name][column.dataIndex]"
@@ -54,6 +54,9 @@
                                     :options="attractionTypes"
                                     v-model:value="editableData[record.name][column.dataIndex]"
                                     style="margin: -5px 0" />
+                                <a-textarea v-else-if="editableData[record.name] && column.dataIndex === 'description'"
+                                    v-model:value="editableData[record.name][column.dataIndex]"
+                                    placeholder="Description" />
                                 <template v-else>{{ record[column.dataIndex] }}</template>
                             </div>
                         </template>
@@ -86,19 +89,6 @@
                 <a-button class="mt-2" @click="handleAddAttraction">Add attraction</a-button>
             </a-form-item>
         </a-form>
-
-        <!-- Images Section -->
-        <!-- <div v-if="formModel.images?.length" class="mt-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Images</label>
-            <div class="grid grid-cols-2 gap-2">
-                <div v-for="(image, index) in formModel.images" :key="image.image"
-                    class="border rounded p-2 flex flex-col justify-between">
-                    <a-image :src="image.image" :alt="image.title" class="w-full h-32 object-cover mb-2" />
-                    <a-input v-model:value="formModel.images[index].title" size="small" placeholder="Image title"
-                        class="text-xs" />
-                </div>
-            </div>
-        </div> -->
         <FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false" @success="handleFileUpload">
             <template #default="{ openFileSelector }">
                 <div class="rounded overflow-hidden cursor-pointer" @click="openFileSelector">
@@ -112,16 +102,6 @@
             </template>
         </FileUploader>
 
-        <!-- Image Upload Modal -->
-        <!-- <a-modal v-model:open="imageOpen" title="New destination image" @ok="handleImage" @cancel="imageOpen = false">
-            <a-form :form="imageFormRef" :model="newImageForm" :rules="imageFormRules" layout="vertical">
-                <a-form-item label="Title" name="title">
-                    <a-input v-model:value="newImageForm.title" placeholder="Enter title" />
-                </a-form-item>
-            </a-form>
-            
-        </a-modal> -->
-
         <a-modal v-model:open="attractionOpen" title="Add Attraction" @ok="handleSaveAttraction"
             :loading="attractionSaving" @cancel="handleCancelAttraction">
             <a-form :form="attractionFormRef" :model="newAttractionForm" :rules="attractionFormRules" layout="vertical">
@@ -131,6 +111,9 @@
                 <a-form-item label="Type" name="type">
                     <a-select v-model:value="newAttractionForm.type" :options="attractionTypes"
                         placeholder="Select type" />
+                </a-form-item>
+                <a-form-item label="Description" name="description">
+                    <a-textarea v-model:value="newAttractionForm.description" placeholder="Description" />
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -213,8 +196,9 @@ const columns = [
 ]
 
 const attractionColumns = [
-    { title: 'Attraction Name', dataIndex: 'attraction_name' },
-    { title: 'Type', dataIndex: 'type' },
+    { title: 'Attraction Name', dataIndex: 'attraction_name', width: '30%' },
+    { title: 'Type', dataIndex: 'type', },
+    { title: 'Description', dataIndex: 'description' },
     { title: 'Action', key: 'Action' },
 ]
 
