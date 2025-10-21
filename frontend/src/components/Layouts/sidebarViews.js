@@ -14,6 +14,11 @@ const links = [
         to: 'TourList',
     },
     {
+        label: 'Lead',
+        icon: 'map',
+        to: 'LeadList',
+    },
+    {
         label: 'Guide',
         icon: 'user',
         to: 'Guide',

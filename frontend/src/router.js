@@ -19,6 +19,17 @@ const routes = [
     component: () => import('@/pages/TourList.vue'),
   },
   {
+    path: '/lead/',
+    name: 'LeadList',
+    component: () => import('@/pages/LeadList.vue'),
+  },
+  {
+    path: '/lead/:name?',
+    name: 'Lead',
+    props: true,
+    component: () => import('@/pages/Lead.vue'),
+  },
+  {
     path: '/activity/',
     name: 'ActivityList',
     component: () => import('@/pages/ActivityList.vue'),
