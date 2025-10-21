@@ -64,7 +64,7 @@ const creating = ref(false);
 
 const tours = createListResource({
     doctype: 'Tour',
-    fields: ['name', 'tour_name', 'duration',],
+    fields: ['name', 'tour_name', 'duration', 'image'],
     auto: false
 });
 

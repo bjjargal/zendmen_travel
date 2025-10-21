@@ -15,6 +15,18 @@
     <a-spin v-if="tour.get.loading">Loading</a-spin>
     <div v-else class="w-full h-full bg-white flex">
         <div class=" w-[25%] h-full p-2 flex flex-col gap-1 border-r">
+            <FileUploader :fileTypes="['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx']" :multiple="false"
+                @success="handleFileUpload" class="border-none p-0">
+                <template #default="{ openFileSelector }">
+                    <div class="rounded overflow-hidden cursor-pointer" @click="openFileSelector">
+                        <img v-if="tour.doc.image" :src="tour.doc.image" alt="avatar"
+                            class="w-full h-48 object-cover" />
+                        <div v-else class="h-48 bg-gray-200 flex items-center justify-center">
+                            <div class="ant-upload-text">Upload Image</div>
+                        </div>
+                    </div>
+                </template>
+            </FileUploader>
             <a-form layout="vertical" class="w-full">
                 <a-form-item :colon="false" labelAlign="left" label="Tour name">
                     <a-input type="text" v-model:value="tour.doc.tour_name" />
@@ -42,96 +54,111 @@
             </a-form>
         </div>
         <div class="flex-1 p-2">
-            <a-form layout="vertical" class="">
-                <a-form-item :colon="false" labelAlign="left">
-                    <a-tabs class="" v-model:activeKey="current" tab-position="top" type="card">
-                        <a-tab-pane v-for="day in tour.doc.duration" :key="day" :tab="`Day ${day}`">
-                            <div v-for="(a, idx) in tour.doc.accomodation.filter(acc => acc.day === day)" :key="idx"
-                                class="!grid grid-cols-4 gap-2">
-                                <a-form-item label="title" name="title">
-                                    <a-input type="text" v-model:value="a.title" />
-                                </a-form-item>
-                                <a-form-item label="Destination" name="destination">
-                                    <a-select :options="destinationOptions" v-model:value="a.destination" allow-clear>
-                                        <template #dropdownRender="{ menuNode: destinationOptions }">
-                                            <v-nodes :vnodes="destinationOptions" />
-                                            <a-divider style="margin: 4px 0" />
-                                            <a-space style="padding: 4px 8px">
-                                                <a-input ref="inputRef" v-model:value="newDestination"
-                                                    placeholder="Please enter destination" />
-                                                <a-button type="text" @click="addDestination"
-                                                    class=" !flex  justify-center items-center">
-                                                    <template #icon>
-                                                        <FeatherIcon name="plus" class="size-4" />
-                                                    </template>
-                                                    add
-                                                </a-button>
-                                            </a-space>
-                                        </template>
-                                    </a-select>
-                                </a-form-item>
-                                <a-form-item label="Difficulty">
-                                    <a-select :options="difficultyOptions" v-model:value="a.difficulty" allow-clear />
-                                </a-form-item>
-                                <a-form-item label="Accomodation">
-                                    <a-select :options="accomodationOptions" v-model:value="a.accomodation"
-                                        allow-clear />
-                                </a-form-item>
-                                <a-form-item label="Distance">
-                                    <a-input-number v-model:value="a.distance" allow-clear class="!w-full"
-                                        addon-after="km" />
-                                </a-form-item>
-                                <a-form-item label="Drive Time" :colon="false">
-                                    <a-input-number v-model:value="a.drive_time" allow-clear class="!w-full"
-                                        addon-after="hours" />
-                                </a-form-item>
-                                <a-form-item label="Terrain">
-                                    <a-select :options="terrainOptions" v-model:value="a.terrain" allow-clear />
-                                </a-form-item>
-                                <a-form-item label="Altitude">
-                                    <a-input-number v-model:value="a.altitude" allow-clear class="!w-full"
-                                        addon-after="m" />
-                                </a-form-item>
-                                <a-form-item label="Meals" class="">
-                                    <a-space direction="vertical">
-                                        <a-checkbox :checked="!!a.breakfast"
-                                            @update:checked="a.breakfast = !a.breakfast">Breakfast</a-checkbox>
-                                        <a-checkbox :checked="!!a.lunch"
-                                            @update:checked="a.lunch = !a.lunch">Lunch</a-checkbox>
-                                        <a-checkbox :checked="!!a.dinner"
-                                            @update:checked="a.dinner = !a.dinner">Dinner</a-checkbox>
+
+            <a-tabs class="" v-model:activeKey="current" tab-position="top" type="card">
+                <a-tab-pane v-for="day in tour.doc.duration" :key="day" :tab="`Day ${day}`">
+                    <div v-for="(a, idx) in tour.doc.accomodation.filter(acc => acc.day === day)" :key="idx"
+                        class="mb-2 ">
+                        <FileUploader :fileTypes="['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx']" :multiple="false"
+                            @success="(file) => a.image = file.file_url" class="border-none p-0">
+                            <template #default="{ openFileSelector }">
+                                <div class="rounded overflow-hidden cursor-pointer" @click="openFileSelector">
+                                    <img v-if="a.image" :src="a.image" alt="avatar" class="w-full h-60 object-cover" />
+                                    <div v-else class="h-48 bg-gray-200 flex items-center justify-center">
+                                        <div class="ant-upload-text">Upload Image</div>
+                                    </div>
+                                </div>
+                            </template>
+                        </FileUploader>
+                        <a-form-item label="image description" name="title">
+                            <a-input v-model:value="a.image_title" allow-clear size="small"
+                                placeholder="Please enter image description"></a-input>
+                        </a-form-item>
+                    </div>
+                    <a-form v-for="(a, idx) in tour.doc.accomodation.filter(acc => acc.day === day)" :key="idx"
+                        layout="vertical" class="!grid grid-cols-4 gap-2">
+                        <a-form-item label="title" name="title">
+                            <a-input type="text" v-model:value="a.title" />
+                        </a-form-item>
+                        <a-form-item label="Destination" name="destination">
+                            <a-select :options="destinationOptions" v-model:value="a.destination" allow-clear>
+                                <template #dropdownRender="{ menuNode: destinationOptions }">
+                                    <v-nodes :vnodes="destinationOptions" />
+                                    <a-divider style="margin: 4px 0" />
+                                    <a-space style="padding: 4px 8px">
+                                        <a-input ref="inputRef" v-model:value="newDestination"
+                                            placeholder="Please enter destination" />
+                                        <a-button type="text" @click="addDestination"
+                                            class=" !flex  justify-center items-center">
+                                            <template #icon>
+                                                <FeatherIcon name="plus" class="size-4" />
+                                            </template>
+                                            add
+                                        </a-button>
                                     </a-space>
-                                </a-form-item>
-                                <a-form-item label="Activities" class="">
-                                    <a-checkbox-group v-model:value="dayActivity"
-                                        :options="getActivityOptions(a.destination)" />
-                                </a-form-item>
-                                <a-form-item label="Attractions" class="">
-                                    <a-checkbox-group v-model:value="dayAttraction"
-                                        :options="getAttractionOptions(a.destination)" />
-                                </a-form-item>
-                            </div>
-                            <a-form-item label="Notes">
-                                <a-table :columns="noteColumns" :pagination="false" :data-source="notes" size="small">
-                                    <template #bodyCell="{ column, record }">
-                                        <template v-if="column.dataIndex === 'note'">
-                                            <a-textarea :rows="1" v-model:value="record.note" />
-                                            {{ record.node }}
-                                        </template>
-                                        <template v-else>
-                                            <div class="flex gap-2">
-                                                <a-button @click="deleteNote(record)" danger
-                                                    size="small">Delete</a-button>
-                                            </div>
-                                        </template>
-                                    </template>
-                                </a-table>
-                                <a-button class="mt-2" @click="addNote">add note</a-button>
-                            </a-form-item>
-                        </a-tab-pane>
-                    </a-tabs>
-                </a-form-item>
-            </a-form>
+                                </template>
+                            </a-select>
+                        </a-form-item>
+                        <a-form-item label="Difficulty">
+                            <a-select :options="difficultyOptions" v-model:value="a.difficulty" allow-clear />
+                        </a-form-item>
+                        <a-form-item label="Accomodation">
+                            <a-select :options="accomodationOptions" v-model:value="a.accomodation" allow-clear />
+                        </a-form-item>
+                        <a-form-item label="Distance">
+                            <a-input-number v-model:value="a.distance" allow-clear class="!w-full" addon-after="km" />
+                        </a-form-item>
+                        <a-form-item label="Drive Time" :colon="false">
+                            <a-input-number v-model:value="a.drive_time" allow-clear class="!w-full"
+                                addon-after="hours" />
+                        </a-form-item>
+                        <a-form-item label="Terrain">
+                            <a-select :options="terrainOptions" v-model:value="a.terrain" allow-clear />
+                        </a-form-item>
+                        <a-form-item label="Altitude">
+                            <a-input-number v-model:value="a.altitude" allow-clear class="!w-full" addon-after="m" />
+                        </a-form-item>
+                        <a-form-item label="Meals" class="">
+                            <a-space direction="vertical">
+                                <a-checkbox :checked="!!a.breakfast"
+                                    @update:checked="a.breakfast = !a.breakfast">Breakfast</a-checkbox>
+                                <a-checkbox :checked="!!a.lunch" @update:checked="a.lunch = !a.lunch">Lunch</a-checkbox>
+                                <a-checkbox :checked="!!a.dinner"
+                                    @update:checked="a.dinner = !a.dinner">Dinner</a-checkbox>
+                            </a-space>
+                        </a-form-item>
+                        <a-form-item label="Activities" class="">
+                            <a-checkbox-group v-model:value="dayActivity"
+                                :options="getActivityOptions(a.destination)" />
+                        </a-form-item>
+                        <a-form-item label="Attractions" class="">
+                            <a-checkbox-group v-model:value="dayAttraction"
+                                :options="getAttractionOptions(a.destination)" />
+                        </a-form-item>
+
+
+                    </a-form>
+
+
+                    <a-table :columns="noteColumns" :pagination="false" :data-source="notes" size="small">
+                        <template #bodyCell="{ column, record }">
+                            <template v-if="column.dataIndex === 'note'">
+                                <a-textarea :rows="1" v-model:value="record.note" />
+                                {{ record.node }}
+                            </template>
+                            <template v-else>
+                                <div class="flex gap-2">
+                                    <a-button @click="deleteNote(record)" danger size="small">Delete</a-button>
+                                </div>
+                            </template>
+                        </template>
+                    </a-table>
+                    <a-button class="mt-2" @click="addNote">add note</a-button>
+
+
+                </a-tab-pane>
+            </a-tabs>
+
         </div>
     </div>
     <a-modal v-model:open="pdfOpen" title="" width="60%" @ok="downloadPDF">
@@ -141,7 +168,7 @@
     </a-modal>
 </template>
 <script setup>
-import { createDocumentResource, createResource } from 'frappe-ui';
+import { createDocumentResource, createResource, FileUploader } from 'frappe-ui';
 import { ref, computed, watch, nextTick, defineComponent } from 'vue';
 import { DestinationStore } from '@/data/destinations';
 import { ActivityStore } from '@/data/Activities';
@@ -188,7 +215,8 @@ const difficultyOptions = [
 const accomodationOptions = [
     { value: 'Camping' },
     { value: 'Hotel' },
-    { value: 'Ger Camp' }
+    { value: 'Ger Camp' },
+    { value: 'Not included' }
 ]
 
 const terrainOptions = [
@@ -446,5 +474,10 @@ const VNodes = defineComponent({
         return this.vnodes;
     },
 });
+const handleFileUpload = (file) => {
+    tour.doc.image = file.file_url;
+};
+
+
 </script>
 
