@@ -8,32 +8,18 @@
 		</a-page-header>
 
 		<!-- DESTINATION TABLE -->
-		<a-table
-			:columns="columns"
-			:data-source="destinations.data"
-			:loading="destinations.list.loading"
-			:pagination="false"
-			row-key="name"
-			:scroll="{ x: '100%', y: 'calc(100vh - 280px)' }"
-			size="middle"
-			class="bg-white mx-4"
-		>
+		<a-table :columns="columns" :data-source="destinations.data" :loading="destinations.list.loading"
+			:pagination="false" row-key="name" :scroll="{ x: '100%', y: 'calc(100vh - 280px)' }" size="middle"
+			class="bg-white mx-4">
 			<template #bodyCell="{ column, record }">
 				<template v-if="column.key === 'Action'">
 					<div class="flex flex-wrap gap-2 justify-center">
-						<a-button
-							@click="editDestination(record.name)"
-							type="text"
-							class="!flex justify-center items-center text-blue-500 hover:text-blue-600"
-						>
+						<a-button @click="editDestination(record.name)" type="text"
+							class="!flex justify-center items-center text-blue-500 hover:text-blue-600">
 							<FeatherIcon name="edit" class="size-4" />
 						</a-button>
-						<a-button
-							@click="deleteDestination(record.name)"
-							type="text"
-							danger
-							class="!flex justify-center items-center text-red-500 hover:text-red-600"
-						>
+						<a-button @click="deleteDestination(record.name)" type="text" danger
+							class="!flex justify-center items-center text-red-500 hover:text-red-600">
 							<FeatherIcon name="trash-2" class="size-4" />
 						</a-button>
 					</div>
@@ -42,105 +28,55 @@
 		</a-table>
 
 		<!-- DESTINATION MODAL -->
-		<a-modal
-			v-model:open="open"
-			:width="isMobile ? '95%' : '95%'"
-			:title="`Destination: ${formModel?.destination_name || ''}`"
-			okText="Save"
-			@ok="handleSave"
-			:confirm-loading="saving"
-			@cancel="handleCancel"
-			centered
-		>
+		<a-modal v-model:open="open" :width="'95%'" :title="`Destination: ${formModel?.destination_name || ''}`"
+			okText="Save" @ok="handleSave" :confirm-loading="saving" @cancel="handleCancel" centered>
 			<div class="flex flex-col lg:flex-row gap-6">
 				<!-- LEFT SIDE FORM -->
 				<div class="flex-1 space-y-3">
-					<a-form
-						:form="createFormRef"
-						:model="formModel"
-						:rules="formRules"
-						layout="vertical"
-					>
+					<a-form :form="createFormRef" :model="formModel" :rules="formRules" layout="vertical">
 						<a-form-item label="Destination Name" name="destination_name">
-							<a-input
-								v-model:value="formModel.destination_name"
-								placeholder="Enter destination name"
-							/>
+							<a-input v-model:value="formModel.destination_name" placeholder="Enter destination name" />
 						</a-form-item>
 
 						<a-form-item label="Description" name="description">
-							<a-textarea
-								:rows="4"
-								v-model:value="formModel.description"
-								placeholder="Enter description"
-							/>
+							<a-textarea :rows="4" v-model:value="formModel.description"
+								placeholder="Enter description" />
 						</a-form-item>
 
 						<a-form-item label="Image Title" name="image_title">
-							<a-input
-								v-model:value="formModel.image_title"
-								placeholder="Enter image title"
-							/>
+							<a-input v-model:value="formModel.image_title" placeholder="Enter image title" />
 						</a-form-item>
 
 						<div class="pt-2">
-							<a-typography-title :level="5" class="!m-0"
-								>Attractions</a-typography-title
-							>
+							<a-typography-title :level="5" class="!m-0">Attractions</a-typography-title>
 						</div>
 
 						<!-- ATTRACTIONS TABLE -->
-						<a-table
-							:columns="attractionColumns"
-							:data-source="filteredAttractions"
-							:loading="attractions.list.loading"
-							:pagination="false"
-							row-key="name"
-							size="small"
-							class="bg-white"
-							:scroll="{ x: '100%' }"
-						>
+						<a-table :columns="attractionColumns" :data-source="filteredAttractions"
+							:loading="attractions.list.loading" :pagination="false" row-key="name" size="small"
+							class="bg-white" :scroll="{ x: '100%' }">
 							<template #bodyCell="{ column, record }">
-								<template
-									v-if="
-										['attraction_name', 'type', 'description'].includes(
-											column.dataIndex,
-										)
-									"
-								>
+								<template v-if="
+									['attraction_name', 'type', 'description'].includes(
+										column.dataIndex,
+									)
+								">
 									<div>
-										<a-input
-											v-if="
-												editableData[record.name] &&
-												column.dataIndex === 'attraction_name'
-											"
-											v-model:value="
-												editableData[record.name][column.dataIndex]
-											"
-											size="small"
-										/>
-										<a-select
-											v-else-if="
-												editableData[record.name] &&
-												column.dataIndex === 'type'
-											"
-											:options="attractionTypes"
-											v-model:value="
-												editableData[record.name][column.dataIndex]
-											"
-											size="small"
-										/>
-										<a-textarea
-											v-else-if="
-												editableData[record.name] &&
-												column.dataIndex === 'description'
-											"
-											v-model:value="
-												editableData[record.name][column.dataIndex]
-											"
-											size="small"
-											:rows="1"
-										/>
+										<a-input v-if="
+											editableData[record.name] &&
+											column.dataIndex === 'attraction_name'
+										" v-model:value="editableData[record.name][column.dataIndex]
+												" size="small" />
+										<a-select v-else-if="
+											editableData[record.name] &&
+											column.dataIndex === 'type'
+										" :options="attractionTypes" v-model:value="editableData[record.name][column.dataIndex]
+												" size="small" />
+										<a-textarea v-else-if="
+											editableData[record.name] &&
+											column.dataIndex === 'description'
+										" v-model:value="editableData[record.name][column.dataIndex]
+												" size="small" :rows="1" />
 										<template v-else>{{ record[column.dataIndex] }}</template>
 									</div>
 								</template>
@@ -148,31 +84,18 @@
 								<template v-if="column.key === 'Action'">
 									<div class="flex gap-1">
 										<template v-if="editableData[record.name]">
-											<a-typography-link
-												@click="saveAttraction(record.name)"
-												class="text-blue-500"
-												>Save</a-typography-link
-											>
-											<a-typography-link
-												@click="cancelEdit(record.name)"
-												class="text-gray-500"
-												>Cancel</a-typography-link
-											>
+											<a-typography-link @click="saveAttraction(record.name)"
+												class="text-blue-500">Save</a-typography-link>
+											<a-typography-link @click="cancelEdit(record.name)"
+												class="text-gray-500">Cancel</a-typography-link>
 										</template>
 										<template v-else>
-											<a-button
-												@click="editAttraction(record.name)"
-												type="text"
-												class="text-blue-500 hover:text-blue-600"
-											>
+											<a-button @click="editAttraction(record.name)" type="text"
+												class="text-blue-500 hover:text-blue-600">
 												<FeatherIcon name="edit" class="size-4" />
 											</a-button>
-											<a-button
-												@click="deleteAttraction(record.name)"
-												type="text"
-												danger
-												class="text-red-500 hover:text-red-600"
-											>
+											<a-button @click="deleteAttraction(record.name)" type="text" danger
+												class="text-red-500 hover:text-red-600">
 												<FeatherIcon name="trash-2" class="size-4" />
 											</a-button>
 										</template>
@@ -181,11 +104,8 @@
 							</template>
 						</a-table>
 
-						<a-button
-							type="dashed"
-							class="mt-3 w-full text-gray-600 hover:text-blue-500"
-							@click="handleAddAttraction"
-						>
+						<a-button type="dashed" class="mt-3 w-full text-gray-600 hover:text-blue-500"
+							@click="handleAddAttraction">
 							+ Add Attraction
 						</a-button>
 					</a-form>
@@ -193,27 +113,14 @@
 
 				<!-- RIGHT SIDE IMAGE UPLOAD -->
 				<div class="lg:w-[40%] flex flex-col">
-					<FileUploader
-						:fileTypes="['jpg', 'jpeg', 'png']"
-						:multiple="false"
-						@success="handleFileUpload"
-						class="border-none"
-					>
+					<FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false" @success="handleFileUpload"
+						class="border-none">
 						<template #default="{ openFileSelector }">
-							<div
-								class="rounded-lg overflow-hidden cursor-pointer bg-gray-100 hover:bg-gray-200 transition"
-								@click="openFileSelector"
-							>
-								<img
-									v-if="formModel?.image"
-									:src="formModel.image"
-									alt="preview"
-									class="w-full h-64 object-cover"
-								/>
-								<div
-									v-else
-									class="h-64 flex items-center justify-center text-gray-500 text-sm"
-								>
+							<div class="rounded-lg overflow-hidden cursor-pointer bg-gray-100 hover:bg-gray-200 transition"
+								@click="openFileSelector">
+								<img v-if="formModel?.image" :src="formModel.image" alt="preview"
+									class="w-full h-64 object-cover" />
+								<div v-else class="h-64 flex items-center justify-center text-gray-500 text-sm">
 									Upload Destination Image
 								</div>
 							</div>
@@ -223,42 +130,22 @@
 			</div>
 
 			<!-- ATTRACTION MODAL -->
-			<a-modal
-				v-model:open="attractionOpen"
-				title="Add Attraction"
-				@ok="handleSaveAttraction"
-				:confirm-loading="attractionSaving"
-				@cancel="handleCancelAttraction"
-				:width="isMobile ? '95%' : '420px'"
-				centered
-			>
-				<a-form
-					:form="attractionFormRef"
-					:model="newAttractionForm"
-					:rules="attractionFormRules"
-					layout="vertical"
-				>
+			<a-modal v-model:open="attractionOpen" title="Add Attraction" @ok="handleSaveAttraction"
+				:confirm-loading="attractionSaving" @cancel="handleCancelAttraction" :width="'420px'" centered>
+				<a-form :form="attractionFormRef" :model="newAttractionForm" :rules="attractionFormRules"
+					layout="vertical">
 					<a-form-item label="Attraction Name" name="attraction_name">
-						<a-input
-							v-model:value="newAttractionForm.attraction_name"
-							placeholder="Enter attraction name"
-						/>
+						<a-input v-model:value="newAttractionForm.attraction_name"
+							placeholder="Enter attraction name" />
 					</a-form-item>
 
 					<a-form-item label="Type" name="type">
-						<a-select
-							v-model:value="newAttractionForm.type"
-							:options="attractionTypes"
-							placeholder="Select type"
-						/>
+						<a-select v-model:value="newAttractionForm.type" :options="attractionTypes"
+							placeholder="Select type" />
 					</a-form-item>
 
 					<a-form-item label="Description" name="description">
-						<a-textarea
-							v-model:value="newAttractionForm.description"
-							placeholder="Description"
-							:rows="3"
-						/>
+						<a-textarea v-model:value="newAttractionForm.description" placeholder="Description" :rows="3" />
 					</a-form-item>
 				</a-form>
 			</a-modal>

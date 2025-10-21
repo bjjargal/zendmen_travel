@@ -6,27 +6,16 @@
 	</a-page-header>
 
 	<!-- Empty -->
-	<a-empty
-		v-if="!guides.data || guides.data.length === 0"
-		class="w-full mt-10"
-		description="No guides available"
-	/>
+	<a-empty v-if="!guides.data || guides.data.length === 0" class="w-full mt-10" description="No guides available" />
 
 	<!-- Grid -->
 	<div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
-		<a-card
-			v-for="guide in guides.data"
-			:key="guide.name"
-			hoverable
+		<a-card v-for="guide in guides.data" :key="guide.name" hoverable
 			class="!border-none !shadow-none cursor-pointer transition-all duration-150"
-			@click="router.push({ name: 'Employee', params: { name: guide.name } })"
-		>
+			@click="router.push({ name: 'Employee', params: { name: guide.name } })">
 			<template #cover>
-				<img
-					class="h-64 sm:h-72 md:h-80 w-full object-cover"
-					alt="Guide image"
-					:src="guide.image || '/placeholder.jpg'"
-				/>
+				<img class="h-64 sm:h-72 md:h-80 w-full object-cover" alt="Guide image"
+					:src="guide.image || '/placeholder.jpg'" />
 			</template>
 
 			<a-card-meta :title="`${guide.last_name} ${guide.first_name}`">
@@ -47,15 +36,8 @@
 	</div>
 
 	<!-- Modal -->
-	<a-modal
-		v-model:open="open"
-		title="Create New Guide"
-		@ok="handleCreate"
-		@cancel="handleCancel"
-		:confirm-loading="creating"
-		:width="isMobile ? '95%' : '480px'"
-		centered
-	>
+	<a-modal v-model:open="open" title="Create New Guide" @ok="handleCreate" @cancel="handleCancel"
+		:confirm-loading="creating" :width="'480px'" centered>
 		<a-form ref="createFormRef" :model="newGuide" :rules="formRules" layout="vertical">
 			<a-form-item label="First Name" name="first_name">
 				<a-input v-model:value="newGuide.first_name" placeholder="Enter first name" />
@@ -74,27 +56,13 @@
 			</a-form-item>
 		</a-form>
 
-		<FileUploader
-			:fileTypes="['jpg', 'jpeg', 'png']"
-			:multiple="false"
-			@success="handleFileUpload"
-			class="border-none p-0"
-		>
+		<FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false" @success="handleFileUpload"
+			class="border-none p-0">
 			<template #default="{ openFileSelector }">
-				<div
-					class="rounded overflow-hidden cursor-pointer flex items-center justify-center"
-					@click="openFileSelector"
-				>
-					<img
-						v-if="newGuide.image"
-						:src="newGuide.image"
-						alt="avatar"
-						class="w-full h-56 object-cover"
-					/>
-					<div
-						v-else
-						class="h-56 flex items-center justify-center text-gray-500 text-sm"
-					>
+				<div class="rounded overflow-hidden cursor-pointer flex items-center justify-center"
+					@click="openFileSelector">
+					<img v-if="newGuide.image" :src="newGuide.image" alt="avatar" class="w-full h-56 object-cover" />
+					<div v-else class="h-56 flex items-center justify-center text-gray-500 text-sm">
 						Upload Image
 					</div>
 				</div>
