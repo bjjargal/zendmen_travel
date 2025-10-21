@@ -8,7 +8,8 @@
   "destination_name",
   "description",
   "images",
-  "image"
+  "image",
+  "image_title"
  ],
  "fields": [
   {
@@ -32,12 +33,17 @@
    "fieldname": "image",
    "fieldtype": "Attach Image",
    "label": "image"
+  },
+  {
+   "fieldname": "image_title",
+   "fieldtype": "Small Text",
+   "label": "Image title"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-17 13:41:15.227979",
+ "modified": "2025-10-21 13:59:01.092710",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Destination",

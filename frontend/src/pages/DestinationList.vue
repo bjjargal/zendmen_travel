@@ -88,6 +88,10 @@
                 </a-table>
                 <a-button class="mt-2" @click="handleAddAttraction">Add attraction</a-button>
             </a-form-item>
+            <a-form-item label="Image title" name="image_title">
+                <a-textarea :rows="1" v-model:value="formModel.image_title" placeholder="Enter image title" />
+            </a-form-item>
+
         </a-form>
         <FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false" @success="handleFileUpload">
             <template #default="{ openFileSelector }">
@@ -101,6 +105,7 @@
                 </div>
             </template>
         </FileUploader>
+
 
         <a-modal v-model:open="attractionOpen" title="Add Attraction" @ok="handleSaveAttraction"
             :loading="attractionSaving" @cancel="handleCancelAttraction">
