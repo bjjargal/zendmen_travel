@@ -48,11 +48,27 @@
                         <a-tab-pane v-for="day in tour.doc.duration" :key="day" :tab="`Day ${day}`">
                             <div v-for="(a, idx) in tour.doc.accomodation.filter(acc => acc.day === day)" :key="idx"
                                 class="!grid grid-cols-4 gap-2">
-                                <a-form-item label="title">
+                                <a-form-item label="title" name="title">
                                     <a-input type="text" v-model:value="a.title" />
                                 </a-form-item>
-                                <a-form-item label="Destination">
-                                    <a-select :options="destinationOptions" v-model:value="a.destination" allow-clear />
+                                <a-form-item label="Destination" name="destination">
+                                    <a-select :options="destinationOptions" v-model:value="a.destination" allow-clear>
+                                        <template #dropdownRender="{ menuNode: destinationOptions }">
+                                            <v-nodes :vnodes="destinationOptions" />
+                                            <a-divider style="margin: 4px 0" />
+                                            <a-space style="padding: 4px 8px">
+                                                <a-input ref="inputRef" v-model:value="newDestination"
+                                                    placeholder="Please enter destination" />
+                                                <a-button type="text" @click="addDestination"
+                                                    class=" !flex  justify-center items-center">
+                                                    <template #icon>
+                                                        <FeatherIcon name="plus" class="size-4" />
+                                                    </template>
+                                                    add
+                                                </a-button>
+                                            </a-space>
+                                        </template>
+                                    </a-select>
                                 </a-form-item>
                                 <a-form-item label="Difficulty">
                                     <a-select :options="difficultyOptions" v-model:value="a.difficulty" allow-clear />
@@ -65,7 +81,7 @@
                                     <a-input-number v-model:value="a.distance" allow-clear class="!w-full"
                                         addon-after="km" />
                                 </a-form-item>
-                                <a-form-item label="Drive Time">
+                                <a-form-item label="Drive Time" :colon="false">
                                     <a-input-number v-model:value="a.drive_time" allow-clear class="!w-full"
                                         addon-after="hours" />
                                 </a-form-item>
@@ -74,7 +90,7 @@
                                 </a-form-item>
                                 <a-form-item label="Altitude">
                                     <a-input-number v-model:value="a.altitude" allow-clear class="!w-full"
-                                        addon-after="km" />
+                                        addon-after="m" />
                                 </a-form-item>
                                 <a-form-item label="Meals" class="">
                                     <a-space direction="vertical">
@@ -126,7 +142,7 @@
 </template>
 <script setup>
 import { createDocumentResource, createResource } from 'frappe-ui';
-import { ref, computed, watch, nextTick } from 'vue';
+import { ref, computed, watch, nextTick, defineComponent } from 'vue';
 import { DestinationStore } from '@/data/destinations';
 import { ActivityStore } from '@/data/Activities';
 import { message } from 'ant-design-vue';
@@ -188,7 +204,6 @@ const tour = createDocumentResource({
     name: props.name,
     auto: true
 });
-console.log(activitiesDes.data)
 
 const getActivityOptions = (destination) => {
     return activitiesDes?.data[destination] || []
@@ -409,8 +424,27 @@ const downloadPDF = async () => {
 };
 
 
+const newDestination = ref('')
 
+const addDestination = e => {
+    e.preventDefault();
+    destinations.insert.submit({ 'destination_name': newDestination.value })
+    newDestination.value = '';
+    // setTimeout(() => {
+    //     inputRef.value?.focus();
+    // }, 0);
+};
 
-
+const VNodes = defineComponent({
+    props: {
+        vnodes: {
+            type: Object,
+            required: true,
+        },
+    },
+    render() {
+        return this.vnodes;
+    },
+});
 </script>
 

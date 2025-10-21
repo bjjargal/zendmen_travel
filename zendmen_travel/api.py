@@ -25,7 +25,7 @@ def get_destination():
 @frappe.whitelist()
 def get_destination_activities():
     data = frappe.db.sql(
-        """SELECT destination, parent from `tabDestination Child` group by parent """,
+        """SELECT destination, parent from `tabDestination Child` """,
         as_dict=True,
     )
     ret = {}

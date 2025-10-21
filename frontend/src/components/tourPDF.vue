@@ -105,7 +105,7 @@
                                 <FeatherIcon name="clock" class="size-4" />
                                 <div className="min-w-0">
                                     <div className="text-sm text-gray-600">Drive Time</div>
-                                    <div className=" truncate">{{ a.drive_time }} min</div>
+                                    <div className=" truncate">{{ a.drive_time }} hours</div>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
@@ -119,7 +119,7 @@
                                 <FeatherIcon name="trending-up" class="size-4" />
                                 <div className="min-w-0">
                                     <div className="text-sm text-gray-600">Altitude</div>
-                                    <div className=" truncate">{{ a.aButtonltitude }} km</div>
+                                    <div className=" truncate">{{ a.aButtonltitude }} m</div>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">

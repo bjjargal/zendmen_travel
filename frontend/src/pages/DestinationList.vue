@@ -4,8 +4,6 @@
             <a-button type="primary" @click="handleCreate">Create destination</a-button>
         </template>
     </a-page-header>
-
-    <!-- Main destination list -->
     <a-table :columns="columns" :data-source="destinations.data" size="small" :loading="destinations.list.loading"
         :pagination="false" row-key="name" :scroll="{ y: 'calc(100vh - 280px)' }">
         <template #bodyCell="{ column, record }">
@@ -28,7 +26,6 @@
         </template>
     </a-table>
 
-    <!-- Destination Modal -->
     <a-modal v-model:open="open" width="50%" :title="`Destination: ${formModel?.destination_name || ''}`" okText='Save'
         @ok="handleSave" :loading="saving" @cancel="handleCancel">
         <a-form :form="createFormRef" :model="formModel" :rules="formRules" layout="vertical">
@@ -40,7 +37,6 @@
                 <a-textarea :rows="6" v-model:value="formModel.description" placeholder="Enter description" />
             </a-form-item>
 
-            <!-- Attractions Table -->
             <a-form-item label="Attractions">
                 <a-table :columns="attractionColumns" :data-source="filteredAttractions" size="small"
                     :loading="attractions.list.loading" :pagination="false" row-key="name">
@@ -61,7 +57,6 @@
                             </div>
                         </template>
 
-                        <!-- Action buttons -->
                         <template v-if="column.key === 'Action'">
                             <div class="flex gap-2">
                                 <template v-if="editableData[record.name]">
@@ -91,7 +86,6 @@
             <a-form-item label="Image title" name="image_title">
                 <a-textarea :rows="1" v-model:value="formModel.image_title" placeholder="Enter image title" />
             </a-form-item>
-
         </a-form>
         <FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false" @success="handleFileUpload">
             <template #default="{ openFileSelector }">
