@@ -1,6 +1,9 @@
 <template>
     <a-page-header class="!p-0 !mb-2" :title="tour?.doc?.tour_name || 'tour'" @back="() => $router.go(-1)">
         <template #extra>
+            <a-button @click="duplicateDoc()" :loading="duplicateLoading" type="default">
+                Duplicate
+            </a-button>
             <a-button @click="pdfOpen = true" :loading="false" type="dashed">
                 show pdf
             </a-button>
@@ -122,13 +125,14 @@
     </a-modal>
 </template>
 <script setup>
-import { createDocumentResource } from 'frappe-ui';
+import { createDocumentResource, createResource } from 'frappe-ui';
 import { ref, computed, watch, nextTick } from 'vue';
 import { DestinationStore } from '@/data/destinations';
 import { ActivityStore } from '@/data/Activities';
 import { message } from 'ant-design-vue';
 import { ActivityDesStore } from '@/data/ActivityDestination';
 import { AttractionsStore } from '../data/Attraction';
+import { useRouter } from 'vue-router';
 import tourPDF from '../components/tourPDF.vue';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -140,6 +144,7 @@ const props = defineProps({
     }
 });
 
+const router = useRouter();
 const { destinations } = DestinationStore();
 const { activities } = ActivityStore()
 const { activitiesDes } = ActivityDesStore()
@@ -319,6 +324,23 @@ const deleteNote = (note) => {
     message.success('Note deleted')
 }
 
+const duplicateLoading = ref(false)
+const duplicateDoc = () => {
+    duplicateLoading.value = true
+    createResource({
+        url: "zendmen_travel.api.duplicate_tour",
+        params: {
+            name: tour.doc.name
+        },
+        method: 'POST',
+        auto: true,
+        onSuccess(data) {
+            router.push({ name: 'Tour', params: { name: data } })
+            duplicateLoading.value = false
+            message.success('Successfully duplicated tour')
+        }
+    })
+}
 
 
 const saveDoc = async () => {

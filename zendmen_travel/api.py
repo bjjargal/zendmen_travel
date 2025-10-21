@@ -35,3 +35,17 @@ def get_destination_activities():
         else:
             ret[i.destination] = [i.parent]
     return ret
+
+
+@frappe.whitelist()
+def duplicate_tour(name):
+    tour = frappe.db.exists("Tour", name)
+    if not tour:
+        return frappe.throw("Tour not found")
+
+    doc = frappe.get_doc("Tour", tour)
+
+    new_doc = frappe.copy_doc(doc)
+    new_doc.name = None
+    new_doc.insert()
+    return new_doc.name
