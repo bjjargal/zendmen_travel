@@ -8,7 +8,7 @@
     <div class="w-full mt-4">
         <a-spin :spinning="employees?.list.loading">
             <a-empty v-if="!employees?.data || employees?.data.length === 0" description="No employees available" />
-            <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+            <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
                 <a-card v-for="employee in employees?.data" :key="employee.name" hoverable
                     @click="router.push({ name: 'employee', params: { name: employee.name } })">
                     <template #cover>
