@@ -11,6 +11,7 @@
   "column_break_ksrw",
   "country",
   "whatsapp",
+  "contact",
   "section_break_mhtj",
   "age",
   "group_min",
@@ -133,12 +134,18 @@
    "fieldname": "follow_up_requests",
    "fieldtype": "Small Text",
    "label": "Follow up Requests"
+  },
+  {
+   "fieldname": "contact",
+   "fieldtype": "Link",
+   "label": "Contact",
+   "options": "Lead Contacts"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-21 15:39:22.032827",
+ "modified": "2025-10-22 14:36:26.077904",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Lead",

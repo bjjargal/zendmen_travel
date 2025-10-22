@@ -2,12 +2,12 @@ import { defineStore } from 'pinia'
 import { createListResource } from 'frappe-ui'
 
 export const EmployeeStore = defineStore('EmployeeStore', () => {
-    const emplyees = createListResource({
+    const employees = createListResource({
         doctype: 'Employee',
         cache: "EmployeeCache",
-        fields: ['name', 'first_name', 'last_name','phone'],
+        fields: ['name', 'first_name', 'last_name', 'phone', 'email'],
         auto: true,
         pageLength: 999,
     });
-    return { emplyees }
+    return { employees }
 });

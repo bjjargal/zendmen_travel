@@ -185,14 +185,4 @@ const saveDoc = async () => {
 }
 </script>
 
-<style scoped>
-:deep(input[type="file"]) {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    width: 0;
-    height: 0;
-    position: absolute;
-    pointer-events: none;
-}
-</style>
+

@@ -50,6 +50,12 @@ const routes = [
     component: () => import('@/pages/EmployeeList.vue'),
   },
   {
+    path: '/employee/:name?',
+    name: 'employee',
+    props: true,
+    component: () => import('@/pages/Employee.vue'),
+  },
+  {
     path: '/tour/:name?',
     name: 'Tour',
     props: true,
