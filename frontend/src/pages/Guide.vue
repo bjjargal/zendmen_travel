@@ -4,11 +4,7 @@
 			<a-button type="primary" @click="open = true">Create guide</a-button>
 		</template>
 	</a-page-header>
-
-	<!-- Empty -->
 	<a-empty v-if="!guides.data || guides.data.length === 0" class="w-full mt-10" description="No guides available" />
-
-	<!-- Grid -->
 	<div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
 		<a-card v-for="guide in guides.data" :key="guide.name" hoverable
 			class="!border-none !shadow-none cursor-pointer transition-all duration-150"
@@ -34,8 +30,6 @@
 			</a-card-meta>
 		</a-card>
 	</div>
-
-	<!-- Modal -->
 	<a-modal v-model:open="open" title="Create New Guide" @ok="handleCreate" @cancel="handleCancel"
 		:confirm-loading="creating" :width="'480px'" centered>
 		<a-form ref="createFormRef" :model="newGuide" :rules="formRules" layout="vertical">
