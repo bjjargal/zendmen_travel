@@ -28,7 +28,10 @@
                         <a-input v-model:value="lead.doc.company_name" />
                     </a-form-item>
                     <a-form-item label="Country">
-                        <a-input v-model:value="lead.doc.country" />
+                        <a-select v-model:value="lead.doc.country" :options="countryOptions"
+                            :loading="countrys.list.loading" placeholder="Select country" :showSearch="true"
+                            :show-arrow="false" option-filter-prop="label" :filter-option="true"
+                            :not-found-content="null" />
                     </a-form-item>
                     <a-form-item label="Whatsapp">
                         <a-input v-model:value="lead.doc.whatsapp" />
@@ -81,7 +84,7 @@
                     </a-form-item>
                     <a-form-item label="Business Cart">
                         <FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false"
-                            @success="(file)=>{lead.doc.image = file.file_url}" class="border-none">
+                            @success="(file) => { lead.doc.image = file.file_url }" class="border-none">
                             <template #default="{ openFileSelector }">
                                 <div class="border rounded-lg overflow-hidden cursor-pointer flex items-center justify-center"
                                     @click="openFileSelector">
@@ -104,8 +107,9 @@
 <script setup>
 import { createDocumentResource, FileUploader } from 'frappe-ui';
 import { computed } from 'vue';
-
+import { CountryStore } from '../data/country';
 import { message } from 'ant-design-vue';
+import { treeNodeProps } from 'ant-design-vue/es/vc-tree/props';
 
 
 
@@ -115,6 +119,15 @@ const props = defineProps({
         required: true
     }
 })
+
+const { countrys } = CountryStore()
+
+const countryOptions = computed(() =>
+    countrys?.data.map(item => ({
+        label: item.name,
+        value: item.name
+    })) || []
+)
 
 
 const lead = createDocumentResource({

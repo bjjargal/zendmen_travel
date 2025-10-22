@@ -25,7 +25,10 @@
                 <a-input v-model:value="newLead.company_name" placeholder="Company Name" />
             </a-form-item>
             <a-form-item label="Country">
-                <a-input v-model:value="newLead.country" placeholder="Country" />
+                <!-- <a-input v-model:value="newLead.country" placeholder="Country" /> -->
+                <a-select v-model:value="newLead.country" :options="countryOptions" :loading="countrys.list.loading"
+                    placeholder="Select country" :showSearch="true" :show-arrow="false" option-filter-prop="label"
+                    :filter-option="true" :not-found-content="null" />
             </a-form-item>
             <a-form-item label="Whatsapp">
                 <a-input v-model:value="newLead.whatsapp" placeholder="whatsapp" />
@@ -36,9 +39,19 @@
 
 <script setup>
 import { createListResource } from 'frappe-ui';
-import { reactive, ref } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue'
+import { CountryStore } from '@/data/country';
+
+const { countrys } = CountryStore()
+
+const countryOptions = computed(() =>
+    countrys?.data.map(item => ({
+        label: item.name,
+        value: item.name
+    })) || []
+)
 
 const router = useRouter()
 const open = ref(false)

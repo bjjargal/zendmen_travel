@@ -19,6 +19,11 @@ const links = [
         to: 'LeadList',
     },
     {
+        label: 'Employees',
+        icon: 'users',
+        to: 'employeeList',
+    },
+    {
         label: 'Guide',
         icon: 'user',
         to: 'Guide',
