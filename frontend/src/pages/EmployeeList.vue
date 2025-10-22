@@ -1,7 +1,8 @@
 <template>
     <a-page-header class="!p-0 !mb-2" title="Guide" @back="() => $router.go(-1)">
         <template #extra>
-            <a-button type="primary" @click="">Create employee</a-button>
+            <a-button v-if="session.roles.includes('System Manager')" type="primary" @click="open = true">Create
+                employee</a-button>
         </template>
     </a-page-header>
     <div class="w-full mt-4">
@@ -33,8 +34,8 @@
             </div>
         </a-spin>
     </div>
-    <a-modal title="New employee" v-model:open="open" okText="Create employee" @ok="CreateEmployee">
-        <a-form layout="vertical" :model="newEmployee" :rules="rules">
+    <a-modal title="New employee" v-model:open="open" okText="Create employee" @ok="handleOk">
+        <a-form ref="formRef" layout="vertical" :model="newEmployee" :rules="rules">
             <a-form-item label="First name" name="first_name">
                 <a-input v-model:value="newEmployee.first_name" />
             </a-form-item>
@@ -59,12 +60,14 @@ import { EmployeeStore } from '@/data/Employee';
 import { reactive, ref } from 'vue';
 import { useRouter } from "vue-router";
 import { message } from 'ant-design-vue';
-
+import { sessionStore } from '@/data/session'
+const session = sessionStore()
 
 const { employees } = EmployeeStore()
 
 const router = useRouter()
 const open = ref(false)
+const formRef = ref()
 const rules = {
     email: [
         {
@@ -98,6 +101,21 @@ const CreateEmployee = async () => {
         resetNewEmployee()
         open.value = false
     }
+}
+
+const handleOk = () => {
+    formRef.value.validate().then(async () => {
+        try {
+            await employees.insert.submit({ ...newEmployee })
+            message.success('successfuly created new employee', 2)
+            open.value = false
+            resetNewEmployee()
+        } catch (error) {
+            message.error(error?.message || 'Error creating employee', 2)
+        }
+    }).catch(() => {
+        message.warning('Please fill all fields')
+    })
 }
 
 function resetNewEmployee() {
