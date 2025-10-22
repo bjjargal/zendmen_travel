@@ -23,7 +23,18 @@ class Employee(Document):
             user = frappe.new_doc("User")
             user.update(user_dict)
             user.insert()
+            user.add_roles("Employee")
             self.user = user.name
         except:
             self.log_error("create user error", frappe.get_traceback())
             frappe.throw("Error on creating user")
+
+    @frappe.whitelist()
+    def change_password(self, new_password):
+        try:
+            user = frappe.get_doc("User", self.user)
+            user.new_password = new_password
+            user.save()
+        except:
+            self.log_error("change password error", frappe.get_traceback())
+            frappe.throw("Chane password error")

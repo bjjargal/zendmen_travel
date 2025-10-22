@@ -6,7 +6,10 @@
                 <a-tag v-if="employee?.isDirty" color="orange">Not saved</a-tag>
             </template>
             <template #extra>
+                <a-button v-if="session.roles.includes('System Manager')" :loading="employee?.changePassword?.loading"
+                    @click="open = true">Change password</a-button>
                 <a-button type="primary" :loading="employee.save.loading" @click="saveDoc">Save</a-button>
+
             </template>
         </a-page-header>
         <div class="relative w-full flex-1 bg-white p-1 ">
@@ -52,12 +55,20 @@
             </a-spin>
         </div>
     </div>
-
+    <a-modal title="New Password" v-model:open="open" okText="Save" @ok="changePassword">
+        <a-form layout="vertical" :model="form" :rules="pwdRules">
+            <a-form-item label="Password" name="password">
+                <a-input-password v-model:value="form.password" />
+            </a-form-item>
+        </a-form>
+    </a-modal>
 </template>
 <script setup>
 import { createDocumentResource, FileUploader } from 'frappe-ui';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { message } from 'ant-design-vue';
+import { sessionStore } from '@/data/session'
+
 
 const props = defineProps({
     name: {
@@ -67,14 +78,21 @@ const props = defineProps({
 })
 
 const current = ref('main')
-
+const session = sessionStore()
 
 const employee = createDocumentResource({
     doctype: 'Employee',
     name: props.name,
-    auto: true
+    auto: true,
+    whitelistedMethods: {
+        changePassword: 'change_password',
+    },
 })
 
+const open = ref(false)
+const form = reactive({
+    password: ''
+})
 
 const saveDoc = async () => {
     try {
@@ -85,5 +103,34 @@ const saveDoc = async () => {
     }
 }
 
+
+const pwdRules = {
+    password: [
+        {
+            required: true,
+            message: 'Please enter password',
+            trigger: 'blur'
+        },
+        {
+            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+            message: 'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character',
+            trigger: 'blur'
+        }
+    ]
+}
+
+const changePassword = async () => {
+    try {
+        await employee.changePassword.submit({
+            new_password: form.password
+        })
+        message.success('Passord successfully changed', 2)
+        form.password = ''
+        open.value = false
+    }
+    catch (error) {
+        message.error(error?.message || 'error on changing password', 2)
+    }
+}
 
 </script>
