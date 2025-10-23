@@ -50,6 +50,17 @@ const routes = [
     component: () => import('@/pages/EmployeeList.vue'),
   },
   {
+    path: '/oppertunity/',
+    name: 'oppertunityList',
+    component: () => import('@/pages/OppertunityList.vue'),
+  },
+  {
+    path: '/oppertunity/:name?',
+    name: 'oppertunity',
+    props: true,
+    component: () => import('@/pages/Oppertunity.vue'),
+  },
+  {
     path: '/employee/:name?',
     name: 'employee',
     props: true,

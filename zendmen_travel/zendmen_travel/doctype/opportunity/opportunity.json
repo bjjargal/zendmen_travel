@@ -1,0 +1,213 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-22 16:11:58.404671",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "email",
+  "company_name",
+  "country",
+  "whatsapp",
+  "contact",
+  "image",
+  "assigned",
+  "deadline",
+  "status",
+  "lead",
+  "column_break_gppl",
+  "age",
+  "group_min",
+  "group_max",
+  "comfort_type",
+  "season",
+  "duration",
+  "nationality",
+  "group_type",
+  "section_break_erfg",
+  "interest",
+  "note",
+  "follow_up_requests",
+  "year",
+  "other_information"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fieldname": "company_name",
+   "fieldtype": "Data",
+   "label": "Company Name"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country"
+  },
+  {
+   "fieldname": "whatsapp",
+   "fieldtype": "Data",
+   "label": "whatsapp"
+  },
+  {
+   "fieldname": "contact",
+   "fieldtype": "Link",
+   "label": "Contact",
+   "options": "Lead Contacts"
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "label": "Image"
+  },
+  {
+   "fieldname": "column_break_gppl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "age",
+   "fieldtype": "Int",
+   "label": "Age"
+  },
+  {
+   "fieldname": "group_min",
+   "fieldtype": "Int",
+   "label": "Group min"
+  },
+  {
+   "fieldname": "group_max",
+   "fieldtype": "Int",
+   "label": "Group max"
+  },
+  {
+   "fieldname": "comfort_type",
+   "fieldtype": "Select",
+   "label": "Comfort Type",
+   "options": "Budget\nLuxury\nComfort"
+  },
+  {
+   "fieldname": "season",
+   "fieldtype": "Data",
+   "label": "Season"
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Data",
+   "label": "Duration"
+  },
+  {
+   "fieldname": "nationality",
+   "fieldtype": "Data",
+   "label": "Nationality"
+  },
+  {
+   "fieldname": "group_type",
+   "fieldtype": "Select",
+   "label": "Group Type",
+   "options": "Family\nFriends\nColleages"
+  },
+  {
+   "fieldname": "section_break_erfg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "interest",
+   "fieldtype": "Small Text",
+   "label": "Interest"
+  },
+  {
+   "fieldname": "note",
+   "fieldtype": "Small Text",
+   "label": "Note"
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Table",
+   "label": "Year",
+   "options": "Lead Year"
+  },
+  {
+   "fieldname": "follow_up_requests",
+   "fieldtype": "Small Text",
+   "label": "Follow up Requests"
+  },
+  {
+   "fieldname": "assigned",
+   "fieldtype": "Link",
+   "label": "Assigned",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "deadline",
+   "fieldtype": "Date",
+   "label": "Deadline"
+  },
+  {
+   "default": "New",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "New\nResponded\nClosed"
+  },
+  {
+   "fieldname": "lead",
+   "fieldtype": "Link",
+   "label": "Lead",
+   "options": "Lead"
+  },
+  {
+   "fieldname": "other_information",
+   "fieldtype": "Small Text",
+   "label": "Other Information"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-22 17:09:34.346884",
+ "modified_by": "Administrator",
+ "module": "Zendmen Travel",
+ "name": "Opportunity",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
