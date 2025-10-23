@@ -61,6 +61,11 @@ const routes = [
     component: () => import('@/pages/Oppertunity.vue'),
   },
   {
+    path: '/contacts/',
+    name: 'contactList',
+    component: () => import('@/pages/ContactList.vue'),
+  },
+  {
     path: '/employee/:name?',
     name: 'employee',
     props: true,

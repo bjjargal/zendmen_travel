@@ -15,13 +15,18 @@ const links = [
     },
     {
         label: 'Lead',
-        icon: 'map',
+        icon: 'sliders',
         to: 'LeadList',
     },
     {
         label: 'Oppertunity',
-        icon: 'map',
+        icon: 'package',
         to: 'oppertunityList',
+    },
+    {
+        label: 'Contacts',
+        icon: 'phone-call',
+        to: 'contactList',
     },
     {
         label: 'Employees',
