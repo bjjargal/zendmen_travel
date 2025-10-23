@@ -1,9 +1,13 @@
 <template>
 	<div>
-		<div class="lg:hidden fixed top-4 left-4 z-50">
+		<div class="lg:hidden fixed top-4 left-4 pl-3 z-50">
 			<a-button type="text" @click="menuOpen = true">
 				<template #icon>
-					<img src="@/assets/images/ZendmenMenu.svg" alt="" />
+					<img
+						src="@/assets/images/ZendmenMenu.svg"
+						alt="menu"
+						class="w-6 h-10 object-contain"
+					/>
 				</template>
 			</a-button>
 		</div>
