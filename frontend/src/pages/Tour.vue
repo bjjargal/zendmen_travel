@@ -1,19 +1,12 @@
 <template>
 	<div class="min-h-screen">
-		<a-page-header
-			class="!p-0 mb-3 px-4 py-2 sticky top-0 z-10"
-			:title="tour?.doc?.tour_name || 'Tour'"
-			@back="() => $router.go(-1)"
-		>
+		<a-page-header class="!p-0 mb-3 px-4 py-2 sticky top-0 z-10" :title="tour?.doc?.tour_name || 'Tour'"
+			@back="() => $router.go(-1)">
 			<template #extra>
 				<a-space>
-					<a-button @click="duplicateDoc" :loading="duplicateLoading" type="default"
-						>Duplicate</a-button
-					>
-					<a-button @click="pdfOpen = true" type="dashed">Show PDF</a-button>
-					<a-button @click="saveDoc" :loading="!!tour?.save?.loading" type="primary"
-						>Save</a-button
-					>
+					<a-button @click="duplicateDoc" :loading="duplicateLoading" type="default">Duplicate</a-button>
+					<a-button @click="openPdf" type="dashed">Show PDF</a-button>
+					<a-button @click="saveDoc" :loading="!!tour?.save?.loading" type="primary">Save</a-button>
 				</a-space>
 			</template>
 		</a-page-header>
@@ -22,27 +15,14 @@
 
 		<div v-else class="flex flex-col lg:flex-row h-full bg-white">
 			<div class="w-full lg:w-[28%] p-4 flex flex-col gap-2">
-				<FileUploader
-					:fileTypes="['jpg', 'jpeg', 'png']"
-					:multiple="false"
-					@success="handleFileUpload"
-					class="border-none"
-				>
+				<FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false" @success="handleFileUpload"
+					class="border-none">
 					<template #default="{ openFileSelector }">
-						<div
-							class="rounded-lg overflow-hidden cursor-pointer flex items-center justify-center"
-							@click="openFileSelector"
-						>
-							<img
-								v-if="tour.doc.image"
-								:src="tour.doc.image"
-								alt="avatar"
-								class="w-full h-56 object-cover"
-							/>
-							<div
-								v-else
-								class="h-56 flex items-center justify-center text-gray-500 text-sm"
-							>
+						<div class="rounded-lg overflow-hidden cursor-pointer flex items-center justify-center"
+							@click="openFileSelector">
+							<img v-if="tour.doc.image" :src="tour.doc.image" alt="avatar"
+								class="w-full h-56 object-cover" />
+							<div v-else class="h-56 flex items-center justify-center text-gray-500 text-sm">
 								Upload Image
 							</div>
 						</div>
@@ -51,10 +31,7 @@
 
 				<a-form layout="vertical" class="w-full space-y-1">
 					<a-form-item label="Tour Name" name="tour_name">
-						<a-input
-							v-model:value="tour.doc.tour_name"
-							placeholder="Enter tour name"
-						/>
+						<a-input v-model:value="tour.doc.tour_name" placeholder="Enter tour name" />
 					</a-form-item>
 
 					<a-form-item label="Subtitle" name="sub_title">
@@ -63,46 +40,23 @@
 
 					<div class="grid grid-cols-2 gap-2">
 						<a-form-item label="Duration" name="duration">
-							<a-input-number
-								v-model:value="tour.doc.duration"
-								:min="1"
-								:max="30"
-								class="!w-full"
-								addon-after="Days"
-							/>
+							<a-input-number v-model:value="tour.doc.duration" :min="1" :max="30" class="!w-full"
+								addon-after="Days" />
 						</a-form-item>
 						<a-form-item label="Difficulty" name="difficulty">
-							<a-select
-								v-model:value="tour.doc.difficulty"
-								:options="difficultyOptions"
-								allow-clear
-							/>
+							<a-select v-model:value="tour.doc.difficulty" :options="difficultyOptions" allow-clear />
 						</a-form-item>
 					</div>
 
 					<a-form-item label="Group Size" name="group_size">
 						<a-space>
-							<a-input-number
-								v-model:value="tour.doc.min_people"
-								:min="1"
-								:max="20"
-								placeholder="min"
-							/>
-							<a-input-number
-								v-model:value="tour.doc.max_people"
-								:min="1"
-								:max="20"
-								placeholder="max"
-							/>
+							<a-input-number v-model:value="tour.doc.min_people" :min="1" :max="20" placeholder="min" />
+							<a-input-number v-model:value="tour.doc.max_people" :min="1" :max="20" placeholder="max" />
 						</a-space>
 					</a-form-item>
 
 					<a-form-item label="Total Distance" name="total_distance">
-						<a-input-number
-							v-model:value="tour.doc.total_distance"
-							addon-after="km"
-							class="!w-full"
-						/>
+						<a-input-number v-model:value="tour.doc.total_distance" addon-after="km" class="!w-full" />
 					</a-form-item>
 				</a-form>
 			</div>
@@ -111,205 +65,116 @@
 				<a-tabs v-model:activeKey="current" tab-position="top" type="card">
 					<a-tab-pane v-for="day in tour.doc.duration" :key="day" :tab="`Day ${day}`">
 						<div class="flex flex-col gap-4">
-							<div
-								v-for="(a, idx) in tour.doc.accomodation.filter(
-									(acc) => acc.day === day,
-								)"
-								:key="idx"
-								class="p-3 rounded-md"
-							>
-								<FileUploader
-									:fileTypes="['jpg', 'jpeg', 'png']"
-									:multiple="false"
-									@success="(file) => (a.image = file.file_url)"
-								>
+							<div v-for="(a, idx) in tour.doc.accomodation.filter(
+								(acc) => acc.day === day,
+)" :key="idx" class="p-3 rounded-md">
+								<FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false"
+									@success="(file) => (a.image = file.file_url)">
 									<template #default="{ openFileSelector }">
-										<div
-											class="rounded-md overflow-hidden cursor-pointer flex items-center justify-center"
-											@click="openFileSelector"
-										>
-											<img
-												v-if="a.image"
-												:src="a.image"
-												alt="avatar"
-												class="w-full h-60 object-cover"
-											/>
-											<div
-												v-else
-												class="h-48 flex items-center justify-center text-gray-500"
-											>
+										<div class="rounded-md overflow-hidden cursor-pointer flex items-center justify-center"
+											@click="openFileSelector">
+											<img v-if="a.image" :src="a.image" alt="avatar"
+												class="w-full h-60 object-cover" />
+											<div v-else class="h-48 flex items-center justify-center text-gray-500">
 												Upload Day Image
 											</div>
 										</div>
 									</template>
 								</FileUploader>
 
-								<a-form-item
-									label="Image Description"
-									name="image_title"
-									class="mt-2"
-								>
-									<a-input
-										v-model:value="a.image_title"
-										allow-clear
-										placeholder="Enter image description"
-									/>
+								<a-form-item label="Image Description" name="image_title" class="mt-2">
+									<a-input v-model:value="a.image_title" allow-clear
+										placeholder="Enter image description" />
 								</a-form-item>
 							</div>
 
-							<a-form
-								v-for="(a, idx) in tour.doc.accomodation.filter(
-									(acc) => acc.day === day,
-								)"
-								:key="`form-${idx}`"
-								layout="vertical"
-								class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
-							>
+							<a-form v-for="(a, idx) in tour.doc.accomodation.filter(
+								(acc) => acc.day === day,
+)" :key="`form-${idx}`" layout="vertical" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
 								<a-form-item label="Title" name="title">
 									<a-input v-model:value="a.title" placeholder="Title" />
 								</a-form-item>
 
 								<a-form-item label="Destination" name="destination">
-									<a-select
-										v-model:value="a.destination"
-										:options="destinationOptions"
-										allow-clear
-										placeholder="Select destination"
-									/>
+									<a-select v-model:value="a.destination" :options="destinationOptions" allow-clear
+										placeholder="Select destination" />
 								</a-form-item>
 
 								<a-form-item label="Difficulty" name="difficulty">
-									<a-select
-										v-model:value="a.difficulty"
-										:options="difficultyOptions"
-										allow-clear
-									/>
+									<a-select v-model:value="a.difficulty" :options="difficultyOptions" allow-clear />
 								</a-form-item>
 
 								<a-form-item label="Accomodation" name="accomodation">
-									<a-select
-										v-model:value="a.accomodation"
-										:options="accomodationOptions"
-										allow-clear
-									/>
+									<a-select v-model:value="a.accomodation" :options="accomodationOptions"
+										allow-clear />
 								</a-form-item>
 
 								<a-form-item label="Distance" name="distance">
-									<a-input-number
-										v-model:value="a.distance"
-										addon-after="km"
-										class="!w-full"
-									/>
+									<a-input-number v-model:value="a.distance" addon-after="km" class="!w-full" />
 								</a-form-item>
 
 								<a-form-item label="Drive Time" name="drive_time">
-									<a-input-number
-										v-model:value="a.drive_time"
-										addon-after="hrs"
-										class="!w-full"
-									/>
+									<a-input-number v-model:value="a.drive_time" addon-after="hrs" class="!w-full" />
 								</a-form-item>
 
 								<a-form-item label="Terrain" name="terrain">
-									<a-select
-										v-model:value="a.terrain"
-										:options="terrainOptions"
-										allow-clear
-									/>
+									<a-select v-model:value="a.terrain" :options="terrainOptions" allow-clear />
 								</a-form-item>
 
 								<a-form-item label="Altitude" name="altitude">
-									<a-input-number
-										v-model:value="a.altitude"
-										addon-after="m"
-										class="!w-full"
-									/>
+									<a-input-number v-model:value="a.altitude" addon-after="m" class="!w-full" />
 								</a-form-item>
 
 								<a-form-item label="Meals" name="meals">
 									<a-space direction="vertical">
-										<a-checkbox
-											:checked="!!a.breakfast"
-											@update:checked="a.breakfast = !a.breakfast"
-											>Breakfast</a-checkbox
-										>
-										<a-checkbox
-											:checked="!!a.lunch"
-											@update:checked="a.lunch = !a.lunch"
-											>Lunch</a-checkbox
-										>
-										<a-checkbox
-											:checked="!!a.dinner"
-											@update:checked="a.dinner = !a.dinner"
-											>Dinner</a-checkbox
-										>
+										<a-checkbox :checked="!!a.breakfast"
+											@update:checked="a.breakfast = !a.breakfast">Breakfast</a-checkbox>
+										<a-checkbox :checked="!!a.lunch"
+											@update:checked="a.lunch = !a.lunch">Lunch</a-checkbox>
+										<a-checkbox :checked="!!a.dinner"
+											@update:checked="a.dinner = !a.dinner">Dinner</a-checkbox>
 									</a-space>
 								</a-form-item>
 
 								<a-form-item label="Activities" name="activities">
-									<a-checkbox-group
-										v-model:value="dayActivity"
-										:options="getActivityOptions(a.destination)"
-									/>
+									<a-checkbox-group v-model:value="dayActivity"
+										:options="getActivityOptions(a.destination)" />
 								</a-form-item>
 
 								<a-form-item label="Attractions" name="attractions">
-									<a-checkbox-group
-										v-model:value="dayAttraction"
-										:options="getAttractionOptions(a.destination)"
-									/>
+									<a-checkbox-group v-model:value="dayAttraction"
+										:options="getAttractionOptions(a.destination)" />
 								</a-form-item>
 							</a-form>
 
 							<!-- NOTES -->
-							<a-table
-								:columns="noteColumns"
-								:pagination="false"
-								:data-source="notes"
-								size="small"
-								class="mt-3"
-							>
+							<a-table :columns="noteColumns" :pagination="false" :data-source="notes" size="small"
+								class="mt-3">
 								<template #bodyCell="{ column, record }">
 									<template v-if="column.dataIndex === 'note'">
-										<a-textarea
-											:rows="1"
-											v-model:value="record.note"
-											placeholder="Write note"
-										/>
+										<a-textarea :rows="1" v-model:value="record.note" placeholder="Write note" />
 									</template>
 									<template v-else>
-										<a-button danger size="small" @click="deleteNote(record)"
-											>Delete</a-button
-										>
+										<a-button danger size="small" @click="deleteNote(record)">Delete</a-button>
 									</template>
 								</template>
 							</a-table>
 
-							<a-button class="mt-2" @click="addNote" type="dashed"
-								>+ Add Note</a-button
-							>
+							<a-button class="mt-2" @click="addNote" type="dashed">+ Add Note</a-button>
 						</div>
 					</a-tab-pane>
 				</a-tabs>
 			</div>
 		</div>
 
-		<a-modal
-			v-model:open="pdfOpen"
-			title="Preview PDF"
-			:width="'80%'"
-			centered
-			destroy-on-close
-			:bodyStyle="{
-				padding: '1rem',
-				maxHeight: '80vh',
-				overflowY: 'scroll',
-				scrollbarWidth: 'none',
-			}"
-			@ok="downloadPDF"
-		>
-			<div ref="pdfContent" class="w-full no-scrollbar">
-				<tourPDF :tour="tour" />
+		<a-modal v-model:open="pdfOpen" title="Preview PDF" :width="'80%'" centered destroy-on-close :footer="false"
+			class="h-screen">
+			<div class="mt-4 h-full">
+				<iframe v-if="pdfUrl" :src="pdfUrl" width="100%" height="800px" frameborder="0"></iframe>
+
+				<div v-else class="text-center text-gray-500 py-10">
+					Loading PDF...
+				</div>
 			</div>
 		</a-modal>
 	</div>
@@ -534,59 +399,28 @@ const saveDoc = async () => {
 	}
 };
 const pdfOpen = ref(false);
-const pdfContent = ref(null);
+const pdfUrl = ref(null)
 
-const downloadPDF = async () => {
-	try {
-		const el = pdfContent.value;
-		if (!el) {
-			console.error("No element found for PDF");
-			return;
-		}
+const openPdf = () => {
+	pdfOpen.value = true
+	const url = `/api/method/frappe.utils.print_format.download_pdf?doctype=Tour&name=${tour.doc.name}&format=Tour&no_letterhead=1&letterhead=No%20Letterhead&settings=%7B%7D&_lang=en`
+	pdfUrl.value = url // reset for loading state
 
-		// Wait for DOM to fully render
-		await nextTick();
-		await new Promise((resolve) => setTimeout(resolve, 300));
 
-		// Render element to canvas
-		const canvas = await html2canvas(el, {
-			scale: 2,
-			useCORS: true,
-			allowTaint: true,
-			scrollY: -window.scrollY,
-			backgroundColor: "#ffffff",
-		});
+	// try {
+	// 	const response = await fetch(url, {
+	// 		method: 'GET',
+	// 		headers: { Accept: 'application/pdf' },
+	// 	})
 
-		const imgData = canvas.toDataURL("image/png");
+	// 	if (!response.ok) throw new Error('Failed to load PDF')
 
-		const pdf = new jsPDF("p", "pt", "a4");
-		const pageWidth = pdf.internal.pageSize.getWidth();
-		const pageHeight = pdf.internal.pageSize.getHeight();
-
-		const margin = 40;
-		const usableWidth = pageWidth - margin * 2;
-		const imgHeight = (canvas.height * usableWidth) / canvas.width;
-
-		let heightLeft = imgHeight;
-		let position = margin;
-
-		// Add first page
-		pdf.addImage(imgData, "PNG", margin, position, usableWidth, imgHeight);
-		heightLeft -= pageHeight - margin * 2;
-
-		// Add remaining pages
-		while (heightLeft > 0) {
-			pdf.addPage();
-			position = heightLeft - imgHeight + margin;
-			pdf.addImage(imgData, "PNG", margin, position, usableWidth, imgHeight);
-			heightLeft -= pageHeight - margin * 2;
-		}
-
-		pdf.save(`${tour.doc.tour_name || "Tour"}.pdf`);
-	} catch (err) {
-		console.error("❌ PDF generation failed:", err);
-	}
-};
+	// 	const blob = await response.blob()
+	// 	pdfUrl.value = URL.createObjectURL(blob)
+	// } catch (err) {
+	// 	console.error(err)
+	// }
+}
 
 const newDestination = ref("");
 

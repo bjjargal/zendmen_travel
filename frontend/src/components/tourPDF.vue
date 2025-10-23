@@ -42,17 +42,10 @@
 
 		<!-- Daily Sections -->
 		<div v-for="day in tour.doc.duration" :key="day" class="mt-8">
-			<div
-				v-for="(a, idx) in tour.doc.accomodation.filter((acc) => acc.day === day)"
-				:key="idx"
-				class="rounded border overflow-hidden mb-6"
-			>
-				<img
-					v-if="getDestinationImage(a.destination)"
-					:src="getDestinationImage(a.destination)"
-					alt="destination"
-					class="h-80 w-full object-cover"
-				/>
+			<div v-for="(a, idx) in tour.doc.accomodation.filter((acc) => acc.day === day)" :key="idx"
+				class="rounded border overflow-hidden mb-6">
+				<img v-if="getDestinationImage(a.destination)" :src="getDestinationImage(a.destination)"
+					alt="destination" class="h-80 w-full object-cover" />
 
 				<div class="p-6 space-y-6">
 					<!-- Day & Difficulty -->
@@ -80,20 +73,13 @@
 					</div>
 
 					<!-- Notes -->
-					<div
-						v-if="getpdfNotes(day).length > 0"
-						class="bg-gray-100 p-4 rounded-md space-y-2"
-					>
+					<div v-if="getpdfNotes(day).length > 0" class="bg-gray-100 p-4 rounded-md space-y-2">
 						<div class="flex items-center gap-2 font-medium">
 							<FeatherIcon name="info" class="size-4" />
 							Important Notes
 						</div>
 						<ul class="space-y-1 text-sm text-gray-700">
-							<li
-								v-for="notes in getpdfNotes(day)"
-								:key="notes.name"
-								class="flex items-start gap-2"
-							>
+							<li v-for="notes in getpdfNotes(day)" :key="notes.name" class="flex items-start gap-2">
 								<span class="text-primary">•</span>
 								<span>{{ notes.note }}</span>
 							</li>
@@ -104,11 +90,8 @@
 					<div v-if="getpdfAttractions(day).length" class="space-y-3">
 						<h4 class="font-medium text-lg">Main Attractions</h4>
 						<div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-							<div
-								v-for="attraction in getpdfAttractions(day)"
-								:key="attraction.attraction"
-								class="bg-gray-100 px-3 py-1.5 rounded text-sm"
-							>
+							<div v-for="attraction in getpdfAttractions(day)" :key="attraction.attraction"
+								class="bg-gray-100 px-3 py-1.5 rounded text-sm">
 								{{ attraction.attraction }}
 								<span class="text-gray-500 ml-1.5">
 									• {{ getAttractionType(attraction.attraction) }}
@@ -121,11 +104,8 @@
 					<div v-if="getPdfActivities(day).length" class="space-y-3">
 						<h4 class="font-medium text-lg">Activities</h4>
 						<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-							<div
-								v-for="activity in getPdfActivities(day)"
-								:key="activity.activity_name"
-								class="flex gap-3 items-start"
-							>
+							<div v-for="activity in getPdfActivities(day)" :key="activity.activity_name"
+								class="flex gap-3 items-start">
 								<div class="flex-1">
 									<div class="font-medium text-gray-800">
 										{{ activity.activity_name }}
@@ -141,9 +121,7 @@
 					<!-- Travel & Logistics -->
 					<div class="border-t pt-4 space-y-3">
 						<h4 class="text-sm font-semibold text-gray-800">Travel & Logistics</h4>
-						<div
-							class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 text-sm"
-						>
+						<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 text-sm">
 							<div class="flex items-center gap-2">
 								<FeatherIcon name="navigation" class="size-4" />
 								<div>
@@ -184,12 +162,10 @@
 								</div>
 							</div>
 
-							<div
-								v-if="getMeals(a.breakfast, a.lunch, a.dinner)"
-								class="flex items-center gap-2"
-							>
+							<div v-if="getMeals(a.breakfast, a.lunch, a.dinner)" class="flex items-center gap-2">
 								<FeatherIcon name="coffee" class="size-4" />
 								<div>
+
 									<div class="text-gray-500">Meals</div>
 									<div>{{ getMeals(a.breakfast, a.lunch, a.dinner) }}</div>
 								</div>
