@@ -1,26 +1,53 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:vehicle_name",
  "creation": "2025-10-06 14:03:12.124287",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "vehicle_name"
+  "vehicle_name",
+  "seats",
+  "consumption",
+  "price",
+  "fuel_cost"
  ],
  "fields": [
   {
    "fieldname": "vehicle_name",
    "fieldtype": "Data",
-   "label": "Vehicle Name"
+   "label": "Vehicle Name",
+   "unique": 1
+  },
+  {
+   "fieldname": "seats",
+   "fieldtype": "Int",
+   "label": "Seats"
+  },
+  {
+   "fieldname": "consumption",
+   "fieldtype": "Int",
+   "label": "Consumption"
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "fuel_cost",
+   "fieldtype": "Currency",
+   "label": "Fuel cost per km"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-22 14:49:30.662962",
+ "modified": "2025-10-28 15:28:35.963566",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Vehicle",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

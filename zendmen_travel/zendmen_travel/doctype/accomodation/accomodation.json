@@ -1,0 +1,127 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:naming_series",
+ "creation": "2025-10-28 16:45:22.721448",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "accomodation_name",
+  "lux_price",
+  "standard_price",
+  "staff_price",
+  "tourist_b",
+  "tourist_l",
+  "tourist_d",
+  "staff_b",
+  "staff_l",
+  "staff_d",
+  "destination",
+  "type"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "ACC-"
+  },
+  {
+   "fieldname": "accomodation_name",
+   "fieldtype": "Data",
+   "label": "Accomodation Name"
+  },
+  {
+   "fieldname": "lux_price",
+   "fieldtype": "Currency",
+   "label": "Lux price"
+  },
+  {
+   "fieldname": "standard_price",
+   "fieldtype": "Currency",
+   "label": "Standard price"
+  },
+  {
+   "fieldname": "staff_price",
+   "fieldtype": "Currency",
+   "label": "staff price"
+  },
+  {
+   "default": "0",
+   "fieldname": "tourist_b",
+   "fieldtype": "Currency",
+   "label": "Tourist B"
+  },
+  {
+   "default": "0",
+   "fieldname": "tourist_l",
+   "fieldtype": "Currency",
+   "label": "Tourist L"
+  },
+  {
+   "default": "0",
+   "fieldname": "tourist_d",
+   "fieldtype": "Currency",
+   "label": "Tourist D"
+  },
+  {
+   "default": "0",
+   "fieldname": "staff_b",
+   "fieldtype": "Currency",
+   "label": "Staff B"
+  },
+  {
+   "default": "0",
+   "fieldname": "staff_l",
+   "fieldtype": "Currency",
+   "label": "Staff L"
+  },
+  {
+   "default": "0",
+   "fieldname": "staff_d",
+   "fieldtype": "Currency",
+   "label": "Staff D"
+  },
+  {
+   "fieldname": "destination",
+   "fieldtype": "Link",
+   "label": "Destination",
+   "options": "Destination"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "Hotel\nGer camp"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-28 17:20:17.246606",
+ "modified_by": "Administrator",
+ "module": "Zendmen Travel",
+ "name": "Accomodation",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class Guide(Document):
+class Staff(Document):
 	pass

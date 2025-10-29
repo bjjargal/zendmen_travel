@@ -1,0 +1,118 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:naming_series",
+ "creation": "2025-10-27 12:33:50.269229",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "tour",
+  "duration",
+  "naming_series",
+  "column_break_wkvt",
+  "min_people",
+  "max_people",
+  "section_break_lznz",
+  "attractions",
+  "accomodation",
+  "activities",
+  "vehicle",
+  "staffs"
+ ],
+ "fields": [
+  {
+   "fieldname": "tour",
+   "fieldtype": "Link",
+   "label": "Tour",
+   "options": "Tour"
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Int",
+   "label": "duration"
+  },
+  {
+   "fieldname": "column_break_wkvt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "min_people",
+   "fieldtype": "Int",
+   "label": "min_people"
+  },
+  {
+   "fieldname": "max_people",
+   "fieldtype": "Int",
+   "label": "max_people"
+  },
+  {
+   "fieldname": "section_break_lznz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "attractions",
+   "fieldtype": "Table",
+   "label": "Attractions",
+   "options": "Tour Attractions"
+  },
+  {
+   "fieldname": "accomodation",
+   "fieldtype": "Table",
+   "label": "Accomodation",
+   "options": "Tour Accomodation"
+  },
+  {
+   "fieldname": "activities",
+   "fieldtype": "Table",
+   "label": "Activities",
+   "options": "Tour Activities"
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Table",
+   "label": "Vehicle",
+   "options": "Quotation Vehicle"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "Q-"
+  },
+  {
+   "fieldname": "staffs",
+   "fieldtype": "Table",
+   "label": "Staffs",
+   "options": "Quotation staff"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-28 16:27:49.934890",
+ "modified_by": "Administrator",
+ "module": "Zendmen Travel",
+ "name": "Quotation",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

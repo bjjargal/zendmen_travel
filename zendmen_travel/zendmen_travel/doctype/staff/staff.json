@@ -1,27 +1,19 @@
 {
  "actions": [],
- "autoname": "autoincrement",
+ "autoname": "naming_series:naming_series",
  "creation": "2025-10-06 14:02:59.987499",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "first_name",
-  "last_name",
+  "full_name",
+  "type",
+  "price",
   "image",
   "email",
-  "phone_number"
+  "phone_number",
+  "naming_series"
  ],
  "fields": [
-  {
-   "fieldname": "first_name",
-   "fieldtype": "Data",
-   "label": "First name"
-  },
-  {
-   "fieldname": "last_name",
-   "fieldtype": "Data",
-   "label": "Last name"
-  },
   {
    "fieldname": "image",
    "fieldtype": "Attach Image",
@@ -36,16 +28,38 @@
    "fieldname": "phone_number",
    "fieldtype": "Data",
    "label": "Phone Number"
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "type",
+   "options": "Experienced guide\nStandard guide\nBig group guide\nExperienced cook\nStandard cook\nBig group cook"
+  },
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "label": "Full Name"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "Staff-"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-22 14:47:42.212848",
+ "modified": "2025-10-28 15:57:26.324583",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
- "name": "Guide",
- "naming_rule": "Autoincrement",
+ "name": "Staff",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {

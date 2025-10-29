@@ -6,7 +6,7 @@ export const AccommodationStore = defineStore('accommodation', () => {
     const accommodation = createResource({
         method: 'GET',
         url: 'zendmen_travel.api.get_accommodation',  
-        cache: "accommodations",
+        cache: "accommodation",
         auto: true,
         transform(data) {
             return data.map(d => ({

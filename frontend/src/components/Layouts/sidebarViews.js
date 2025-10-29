@@ -24,6 +24,11 @@ const links = [
         to: 'oppertunityList',
     },
     {
+        label: 'Quotation',
+        icon: 'dollar-sign',
+        to: 'quotationList',
+    },
+    {
         label: 'Contacts',
         icon: 'phone-call',
         to: 'contactList',
@@ -34,9 +39,14 @@ const links = [
         to: 'employeeList',
     },
     {
-        label: 'Guide',
+        label: 'Staff',
         icon: 'user',
-        to: 'Guide',
+        to: 'staff',
+    },
+    {
+        label: 'Accomodation',
+        icon: 'home',
+        to: 'accomodationList',
     },
     {
         label: 'Activity',
@@ -48,6 +58,12 @@ const links = [
         icon: 'map',
         to: 'DestinationList',
     },
+    {
+        label: 'Vehicle',
+        icon: 'navigation-2',
+        to: 'VehicleList',
+    },
+
 ]
 
 function hasAccess(link, roles) {

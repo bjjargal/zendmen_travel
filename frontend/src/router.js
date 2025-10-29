@@ -9,9 +9,9 @@ const routes = [
     component: () => import('@/pages/Home.vue'),
   },
   {
-    path: '/guide',
-    name: 'Guide',
-    component: () => import('@/pages/Guide.vue'),
+    path: '/staff/',
+    name: 'staff',
+    component: () => import('@/pages/Staff.vue'),
   },
   {
     path: '/tour/',
@@ -35,14 +35,14 @@ const routes = [
     component: () => import('@/pages/ActivityList.vue'),
   },
   {
+    path: '/accomodation/',
+    name: 'accomodationList',
+    component: () => import('@/pages/AccomodationList.vue'),
+  },
+  {
     path: '/destination/',
     name: 'DestinationList',
     component: () => import('@/pages/DestinationList.vue'),
-  },
-  {
-    path: '/test/',
-    name: 'test',
-    component: () => import('@/pages/test.vue'),
   },
   {
     path: '/employee/',
@@ -53,6 +53,22 @@ const routes = [
     path: '/oppertunity/',
     name: 'oppertunityList',
     component: () => import('@/pages/OppertunityList.vue'),
+  },
+  {
+    path: '/quotation/',
+    name: 'quotationList',
+    component: () => import('@/pages/QuotationList.vue'),
+  },
+  {
+    path: '/quotation/:name?',
+    name: 'quotation',
+    props: true,
+    component: () => import('@/pages/Quotation.vue'),
+  },
+  {
+    path: '/vehicle/',
+    name: 'VehicleList',
+    component: () => import('@/pages/VehicleList.vue'),
   },
   {
     path: '/oppertunity/:name?',
