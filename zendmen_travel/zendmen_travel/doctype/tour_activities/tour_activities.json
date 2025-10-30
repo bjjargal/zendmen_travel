@@ -20,6 +20,8 @@
    "options": "Activity"
   },
   {
+   "fetch_from": "activity_name.cost",
+   "fetch_if_empty": 1,
    "fieldname": "cost",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -37,7 +39,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-14 15:51:48.419594",
+ "modified": "2025-10-29 17:37:38.793155",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Tour Activities",

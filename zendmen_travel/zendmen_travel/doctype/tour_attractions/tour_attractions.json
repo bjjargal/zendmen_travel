@@ -7,7 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "attraction",
-  "day"
+  "day",
+  "cost"
  ],
  "fields": [
   {
@@ -22,13 +23,20 @@
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "day"
+  },
+  {
+   "fetch_from": "attraction.cost",
+   "fetch_if_empty": 1,
+   "fieldname": "cost",
+   "fieldtype": "Currency",
+   "label": "Cost"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-17 15:05:23.621847",
+ "modified": "2025-10-29 17:28:38.226583",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Tour Attractions",

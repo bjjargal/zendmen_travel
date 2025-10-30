@@ -9,15 +9,19 @@
   "tour",
   "duration",
   "naming_series",
+  "min_price",
+  "max_price",
   "column_break_wkvt",
   "min_people",
   "max_people",
+  "category",
   "section_break_lznz",
   "attractions",
   "accomodation",
   "activities",
   "vehicle",
-  "staffs"
+  "staffs",
+  "tourist_accomodation"
  ],
  "fields": [
   {
@@ -84,12 +88,34 @@
    "fieldtype": "Table",
    "label": "Staffs",
    "options": "Quotation staff"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Select",
+   "label": "Category",
+   "options": "Luxury\nBudget\nStandard"
+  },
+  {
+   "fieldname": "tourist_accomodation",
+   "fieldtype": "Table",
+   "label": "Tourist Accomodation",
+   "options": "Quotation Tourist Accomodation"
+  },
+  {
+   "fieldname": "min_price",
+   "fieldtype": "Currency",
+   "label": "Min Price"
+  },
+  {
+   "fieldname": "max_price",
+   "fieldtype": "Currency",
+   "label": "Max Price"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-28 16:27:49.934890",
+ "modified": "2025-10-29 17:35:48.789060",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Quotation",

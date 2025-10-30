@@ -18,6 +18,10 @@
                     <a-form-item label="Tour" name="tour">
                         <a-select v-model:value="quotation.doc.tour" placeholder="Select tour" :options="tourOptions" />
                     </a-form-item>
+                    <a-form-item label="Categoty" name="category">
+                        <a-select v-model:value="quotation.doc.category" placeholder="Select category"
+                            :options="categotyOptions" />
+                    </a-form-item>
                     <a-form-item label="Duration" name="duration">
                         <a-input-number v-model:value="quotation.doc.duration" :min="1" :max="30" class="!w-full"
                             addon-after="Days" />
@@ -69,6 +73,12 @@
                             <a-form-item label="Attractions" name="attractions">
                                 <a-checkbox-group v-model:value="dayAttraction"
                                     :options="getAttractionOptions(a.destination)" />
+                            </a-form-item>
+                            <a-form-item label="Min price" name="min_price">
+                                <a-input :disabled="true" v-model:value="a.min_price"></a-input>
+                            </a-form-item>
+                            <a-form-item label="Max price" name="max_price">
+                                <a-input :disabled="true" v-model:value="a.max_price"></a-input>
                             </a-form-item>
                         </a-form>
                         <a-form layout="vertical">
@@ -133,13 +143,100 @@
                                         </template>
 
                                         <template v-if="column.dataIndex === 'Action'">
-                                            <a-button danger size="small" @click="deleteVehicle(record)">
+                                            <a-button danger size="small" @click="deleteStaff(record)">
                                                 <FeatherIcon name="trash" class="size-4" />
                                             </a-button>
                                         </template>
                                     </template>
                                 </a-table>
                                 <a-button class="!mt-3" @click="addStaff">Add</a-button>
+                            </a-form-item>
+                        </a-form>
+                        <a-form v-for="(a, idx) in quotation.doc.accomodation.filter(
+                            (acc) => acc.day === day,
+                        )" :key="`form-${idx}`" layout="vertical">
+                            <a-form-item label="Tourist accomodation" name="tourist_accomodation">
+                                <a-table :columns="AccommodationColumns" :pagination="false"
+                                    :data-source="quotation.doc.tourist_accomodation?.filter(v => v.day === day) || []">
+                                    <template #bodyCell="{ column, record }">
+                                        <template v-if="column.dataIndex === 'accomodation'">
+                                            <a-select v-model:value="record.accomodation"
+                                                :options="getAccommodationOptions({ destination: a.destination, type: a.accomodation })"
+                                                @select="getAccomodation(record, a)" class="!w-full" />
+                                        </template>
+
+                                        <template v-if="column.dataIndex === 'meal'">
+                                            <a-input-number v-model:value="record.meal" class="!w-full" />
+                                        </template>
+                                        <template v-if="column.dataIndex === 'hotel'">
+                                            <a-input-number v-model:value="record.hotel" class="!w-full" />
+                                        </template>
+                                        <template v-if="column.dataIndex === 'vehicle'">
+                                            <a-input-number v-model:value="record.vehicle" class="!w-full" />
+                                        </template>
+                                        <template v-if="column.dataIndex === 'staff'">
+                                            <a-input-number v-model:value="record.staff" class="!w-full" />
+                                        </template>
+                                        <template v-if="column.dataIndex === 'staff_accomodation'">
+                                            <a-input-number v-model:value="record.staff_accomodation" class="!w-full" />
+                                        </template>
+
+                                        <template v-if="column.dataIndex === 'Action'">
+                                            <a-button danger size="small" @click="deleteAccomodation(record)">
+                                                <FeatherIcon name="trash" class="size-4" />
+                                            </a-button>
+                                        </template>
+                                    </template>
+                                </a-table>
+                                <a-button class="!mt-3" @click="addAccomodation">Add</a-button>
+                            </a-form-item>
+                        </a-form>
+                        <a-form layout="vertical">
+                            <a-form-item label="Activity Price" name="activities">
+                                <a-table :columns="ActivityColumns" :pagination="false"
+                                    :data-source="quotation.doc.activities?.filter(v => v.day === day) || []">
+                                    <template #bodyCell="{ column, record }">
+                                        <template v-if="column.dataIndex === 'activity_name'">
+                                            <a-select v-model:value="record.activity_name" :options="[]"
+                                                @select="getActivity(record)" class="!w-full" />
+                                        </template>
+
+                                        <template v-if="column.dataIndex === 'cost'">
+                                            <a-input-number v-model:value="record.cost" class="!w-full" />
+                                        </template>
+
+                                        <template v-if="column.dataIndex === 'Action'">
+                                            <a-button danger size="small" @click="deleteActivity(record)">
+                                                <FeatherIcon name="trash" class="size-4" />
+                                            </a-button>
+                                        </template>
+                                    </template>
+                                </a-table>
+                                <a-button class="!mt-3" @click="addActivity">Add</a-button>
+                            </a-form-item>
+                        </a-form>
+                        <a-form layout="vertical">
+                            <a-form-item label="Attraction Price" name="attractions">
+                                <a-table :columns="AttractionColumns" :pagination="false"
+                                    :data-source="quotation.doc.attractions?.filter(v => v.day === day) || []">
+                                    <template #bodyCell="{ column, record }">
+                                        <template v-if="column.dataIndex === 'attraction'">
+                                            <a-select v-model:value="record.attraction" :options="[]"
+                                                @select="getAttraction(record)" class="!w-full" />
+                                        </template>
+
+                                        <template v-if="column.dataIndex === 'cost'">
+                                            <a-input-number v-model:value="record.cost" class="!w-full" />
+                                        </template>
+
+                                        <template v-if="column.dataIndex === 'Action'">
+                                            <a-button danger size="small" @click="deleteAttraction(record)">
+                                                <FeatherIcon name="trash" class="size-4" />
+                                            </a-button>
+                                        </template>
+                                    </template>
+                                </a-table>
+                                <a-button class="!mt-3" @click="addAttraction">Add</a-button>
                             </a-form-item>
                         </a-form>
                     </a-tab-pane>
@@ -160,6 +257,7 @@ import { AttractionsStore } from "@/data/Attraction";
 import { vehicleStore } from "@/data/Vehicle";
 import { tourStore } from "@/data/Tour";
 import { staffStore } from "@/data/Staff";
+import { AccommodationsStore } from "@/data/Accomodations";
 
 const props = defineProps({
     name: {
@@ -174,6 +272,25 @@ const { attractions } = AttractionsStore();
 const { vehicles } = vehicleStore()
 const { tours } = tourStore()
 const { staffs } = staffStore()
+const { accomodations } = AccommodationsStore()
+
+const getAccommodationOptions = (filters = {}) => {
+    if (!accomodations?.data) return [];
+
+    return accomodations.data
+        .filter((item) =>
+            Object.entries(filters).every(([key, value]) => {
+                if (!value) return true; // ignore empty filters
+                return item[key] === value;
+            })
+        )
+        .map((item) => ({
+            label: item.accomodation_name,
+            value: item.name,
+        }));
+};
+
+console.log(accomodations?.data)
 
 const staffOptions = computed(() => {
     return staffs?.data.map((item) => ({
@@ -188,6 +305,7 @@ const tourOptions = computed(() => {
         value: item.name
     })) || [];
 });
+const categotyOptions = [{ value: 'Luxury' }, { value: 'Budget' }, { value: 'Standard' },]
 
 const vehicleOptions = computed(() => {
     return (vehicles?.data || []).map(item => ({
@@ -356,14 +474,80 @@ const addStaff = () => {
         stuff_cost: 0,
     });
 }
+const addAccomodation = () => {
+    quotation.doc.tourist_accomodation.push({
+        day: current.value,
+        accomodation: "",
+        meal: 0,
+        hotel: 0,
+        vehicle: 0,
+        staff: 0,
+        count: 0,
+    });
+}
+const addActivity = () => {
+    quotation.doc.activities.push({
+        day: current.value,
+        activity_name: "",
+        cost: 0,
+    });
+}
+const addAttraction = () => {
+    quotation.doc.attractions.push({
+        day: current.value,
+        attraction: "",
+        cost: 0,
+    });
+}
+
 const deleteVehicle = (record) => {
     if (!quotation.doc.vehicle || !Array.isArray(quotation.doc.vehicle)) return;
     if (record.name) {
         quotation.doc.vehicle = quotation.doc.vehicle.filter((n) => n.name !== record.name);
     } else {
-        quotation.doc.vehicle = tour.doc.vehicle.filter((n) => n !== record);
+        quotation.doc.vehicle = quotation.doc.vehicle.filter((n) => n !== record);
     }
     message.success("Vehicle deleted");
+};
+
+const deleteStaff = (record) => {
+    if (!quotation.doc.staffs || !Array.isArray(quotation.doc.staffs)) return;
+    if (record.name) {
+        quotation.doc.staffs = quotation.doc.staffs.filter((n) => n.name !== record.name);
+    } else {
+        quotation.doc.staffs = quotation.doc.staffs.filter((n) => n !== record);
+    }
+    message.success("Staff deleted");
+};
+
+const deleteAccomodation = (record) => {
+    if (!quotation.doc.tourist_accomodation || !Array.isArray(quotation.doc.tourist_accomodation)) return;
+    if (record.name) {
+        quotation.doc.tourist_accomodation = quotation.doc.tourist_accomodation.filter((n) => n.name !== record.name);
+    } else {
+        quotation.doc.tourist_accomodation = quotation.doc.tourist_accomodation.filter((n) => n !== record);
+    }
+    message.success("Accommodation deleted");
+};
+
+const deleteActivity = (record) => {
+    if (!quotation.doc.activities || !Array.isArray(quotation.doc.activities)) return;
+    if (record.name) {
+        quotation.doc.activities = quotation.doc.activities.filter((n) => n.name !== record.name);
+    } else {
+        quotation.doc.activities = quotation.doc.activities.filter((n) => n !== record);
+    }
+    message.success("Activity deleted");
+};
+
+const deleteAttraction = (record) => {
+    if (!quotation.doc.attractions || !Array.isArray(quotation.doc.attractions)) return;
+    if (record.name) {
+        quotation.doc.attractions = quotation.doc.attractions.filter((n) => n.name !== record.name);
+    } else {
+        quotation.doc.attractions = quotation.doc.attractions.filter((n) => n !== record);
+    }
+    message.success("Attraction deleted");
 };
 
 const getVehicle = (record) => {
@@ -376,11 +560,28 @@ const getVehicle = (record) => {
     record.fuel_cost = vec.fuel_cost
 
 };
-const getStaff = (record)=>{
+const getStaff = (record) => {
     if (!record.staff) return;
     const st = staffs.data.find(item => item.name === record.staff);
     record.price = st.price
 
+}
+const getAccomodation = (record, dayAcc) => {
+    const acco = accomodations.data.find(item => item.name === record.accomodation);
+    record.meal = (dayAcc.breakfast ? acco.tourist_b : 0) + (dayAcc.lunch ? acco.tourist_l : 0) + (dayAcc.dinner ? acco.tourist_d : 0)
+    record.hotel = quotation.doc.category === 'Luxury' ? acco.lux_price : acco.standard_price
+    // record.vehicle = (quotation.doc.vehicle
+    //     ?.filter(v => v.day === current.value)
+    //     .reduce((sum, v) => sum + (Number(v.vehicle_cost) || 0), 0) || 0) / quotation.doc.min_people;
+    // record.staff = (quotation.doc.staffs
+    //     ?.filter(v => v.day === current.value)
+    //     .reduce((sum, v) => sum + (Number(v.staff_cost) || 0), 0) || 0) / quotation.doc.min_people;
+    const staff_count = record.staffs = (quotation.doc.staffs
+        ?.filter(v => v.day === current.value)
+        .reduce((sum, v) => sum + (Number(v.count) || 0), 0) || 0);
+    record.staff_accomodation = (staff_count * ((dayAcc.breakfast ? acco.staff_b : 0) + (dayAcc.lunch ? acco.staff_l : 0) + (dayAcc.dinner ? acco.staff_d : 0)
+        + acco.staff_price)) / quotation.doc.min_people
+    record.total = record.meal + record.hotel + record.staff_accomodation
 }
 
 watchEffect(() => {
@@ -389,10 +590,47 @@ watchEffect(() => {
         v.vehicle_cost = ((v.price || 0) * (v.count || 0)) + ((v.fuel_cost || 0) * (v.distance || 0));
     });
 });
+
+
 watchEffect(() => {
     if (!quotation.doc?.staffs) return;
     quotation.doc.staffs.forEach((v) => {
         v.staff_cost = ((v.price || 0) * (v.count || 0));
+    });
+});
+
+// New watchEffect for calculating min_price and max_price per accommodation (per day)
+watchEffect(() => {
+    if (!quotation?.isDirty) return;
+
+    const min_people = quotation.doc.min_people || 1;
+    const max_people = quotation.doc.max_people || 1;
+
+    quotation.doc.accomodation.forEach((a) => {
+        const day = a.day;
+
+        // Sum vehicle costs for the day
+        const sum_vehicle = (quotation.doc.vehicle || []).filter((v) => v.day === day).reduce((sum, v) => sum + (v.vehicle_cost || 0), 0);
+        const vehicle_per_min = sum_vehicle / max_people; // Lower per person when group is larger
+        const vehicle_per_max = sum_vehicle / min_people; // Higher per person when group is smaller
+
+        // Sum staff costs for the day
+        const sum_staff = (quotation.doc.staffs || []).filter((s) => s.day === day).reduce((sum, s) => sum + (s.staff_cost || 0), 0);
+        const staff_per_min = sum_staff / max_people;
+        const staff_per_max = sum_staff / min_people;
+
+        // Sum tourist accommodation totals for the day (assumed already per person)
+        const sum_tourist = (quotation.doc.tourist_accomodation || []).filter((t) => t.day === day).reduce((sum, t) => sum + (t.total || 0), 0);
+
+        // Sum activity costs for the day (assumed per person)
+        const sum_activities = (quotation.doc.activities || []).filter((act) => act.day === day).reduce((sum, act) => sum + (act.cost || 0), 0);
+
+        // Sum attraction costs for the day (assumed per person)
+        const sum_attractions = (quotation.doc.attractions || []).filter((att) => att.day === day).reduce((sum, att) => sum + (att.cost || 0), 0);
+
+        // Set min_price (lowest per person cost) and max_price (highest per person cost)
+        a.min_price = vehicle_per_min + staff_per_min + sum_tourist + sum_activities + sum_attractions;
+        a.max_price = vehicle_per_max + staff_per_max + sum_tourist + sum_activities + sum_attractions;
     });
 });
 
@@ -460,6 +698,83 @@ const staffColumns = [
         title: 'Staff cost',
         key: 'staff_cost',
         dataIndex: 'staff_cost',
+    },
+    {
+        title: 'Action',
+        key: 'Action',
+        dataIndex: 'Action',
+    },
+]
+const AccommodationColumns = [
+    {
+        title: 'Accomodation',
+        key: 'accomodation',
+        dataIndex: 'accomodation',
+    },
+    {
+        title: 'Meal',
+        key: 'meal',
+        dataIndex: 'meal',
+    },
+    {
+        title: 'Hotel',
+        key: 'hotel',
+        dataIndex: 'hotel',
+    },
+    // {
+    //     title: 'Vehicle',
+    //     key: 'vehicle',
+    //     dataIndex: 'vehicle',
+    // },
+    // {
+    //     title: 'Staff',
+    //     key: 'staff',
+    //     dataIndex: 'staff',
+    // },
+    {
+        title: 'Staff Accomodation',
+        key: 'staff_accomodation',
+        dataIndex: 'staff_accomodation',
+    },
+    {
+        title: 'Total',
+        key: 'total',
+        dataIndex: 'total',
+    },
+    {
+        title: 'Action',
+        key: 'Action',
+        dataIndex: 'Action',
+    },
+]
+
+const ActivityColumns = [
+    {
+        title: 'Activity Name',
+        key: 'activity_name',
+        dataIndex: 'activity_name',
+    },
+    {
+        title: 'Cost',
+        key: 'cost',
+        dataIndex: 'cost',
+    },
+    {
+        title: 'Action',
+        key: 'Action',
+        dataIndex: 'Action',
+    },
+]
+const AttractionColumns = [
+    {
+        title: 'Attraction Name',
+        key: 'attraction',
+        dataIndex: 'attraction',
+    },
+    {
+        title: 'Cost',
+        key: 'cost',
+        dataIndex: 'cost',
     },
     {
         title: 'Action',

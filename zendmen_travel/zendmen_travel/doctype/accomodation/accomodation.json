@@ -93,13 +93,13 @@
    "fieldname": "type",
    "fieldtype": "Select",
    "label": "Type",
-   "options": "Hotel\nGer camp"
+   "options": "Camping\nHotel\nGer Camp\nNot included"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-28 17:20:17.246606",
+ "modified": "2025-10-29 15:38:43.421603",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Accomodation",

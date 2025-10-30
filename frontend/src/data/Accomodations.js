@@ -7,8 +7,8 @@ export const AccommodationsStore = defineStore('AccommodationStore', () => {
         fields: ['name', 'accomodation_name',
             'lux_price', 'standard_price',
             'staff_price', 'tourist_b', 'tourist_l', 'tourist_d',
-            'staff_b', 'staff_l', 'staff_d',],
-        cache: 'ActivityCache',
+            'staff_b', 'staff_l', 'staff_d', 'type', 'destination'],
+        cache: 'AccomodationsCache',
         auto: true,
         pageLength: 999,
 

@@ -20,7 +20,9 @@
   "terrain",
   "altitude",
   "image",
-  "image_title"
+  "image_title",
+  "min_price",
+  "max_price"
  ],
  "fields": [
   {
@@ -107,13 +109,23 @@
    "fieldname": "image_title",
    "fieldtype": "Small Text",
    "label": "Image Title"
+  },
+  {
+   "fieldname": "min_price",
+   "fieldtype": "Currency",
+   "label": "Min Price"
+  },
+  {
+   "fieldname": "max_price",
+   "fieldtype": "Currency",
+   "label": "Max Price"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-21 14:50:23.061629",
+ "modified": "2025-10-29 17:36:34.280759",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Tour Accomodation",
