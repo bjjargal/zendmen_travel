@@ -2,7 +2,8 @@
     <a-page-header class="!p-0 !mb-2" title="Accomodation">
     </a-page-header>
     <a-table :columns="columns" :data-source="accomodations.data" size="small" :loading="accomodations.list.loading"
-        bordered="" :pagination="false" row-key="name" :scroll="{ x: 800, y: 'calc(100vh - 280px)' }">
+        class=" min-w-screen  overflow-x-auto" bordered :pagination="false" row-key="name"
+        :scroll="{ x: 800, y: 'calc(100vh - 280px)' }">
         <template #bodyCell="{ column, record }">
             <template v-if="column.key === 'Action'">
                 <span class="editable-row-operations">
@@ -49,12 +50,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { message } from 'ant-design-vue';
-import { ActivityStore } from '@/data/Activities';
 import { DestinationStore } from '@/data/destinations';
 import { AccommodationsStore } from '@/data/Accomodations';
-import { Input, Select, InputNumber, Popconfirm } from 'ant-design-vue';
+
 
 const { accomodations } = AccommodationsStore()
 const { destinations } = DestinationStore()
@@ -69,11 +69,13 @@ const destinationOptions = computed(() => {
 })
 
 const typeOptions = [
-    { value: 'Hotel', label: 'Hotel' },
-    { value: 'Ger camp', label: 'Ger camp' }
+    { value: 'Hotel' },
+    { value: 'Ger Camp' },
+    { value: 'Camping' },
+    { value: 'Not included' }
 ]
 
-const priceColumns = ['lux_price', 'standard_price', 'staff_price', 'tourist_b', 'tourist_l', 'tourist_d', 'staff_b', 'staff_l', 'staff_d']
+const priceColumns = ['lux_price', 'standard_price', 'single_supplement', 'staff_price', 'tourist_b', 'tourist_l', 'tourist_d', 'staff_b', 'staff_l', 'staff_d']
 
 const isPriceColumn = (dataIndex) => priceColumns.includes(dataIndex)
 
@@ -115,15 +117,16 @@ const addNewRow = () => {
         accomodation_name: '',
         destination: '',
         type: '',
-        lux_price: null,
-        standard_price: null,
-        staff_price: null,
-        tourist_b: null,
-        tourist_l: null,
-        tourist_d: null,
-        staff_b: null,
-        staff_l: null,
-        staff_d: null,
+        lux_price: 0,
+        single_supplement: 0,
+        standard_price: 0,
+        staff_price: 0,
+        tourist_b: 0,
+        tourist_l: 0,
+        tourist_d: 0,
+        staff_b: 0,
+        staff_l: 0,
+        staff_d: 0,
     }
     accomodations.data.push(newRow)
     editingKeys.value.add(tempName)
@@ -157,32 +160,44 @@ const columns = [
         title: 'Accomodation Name',
         key: 'accomodation_name',
         dataIndex: 'accomodation_name',
-        tableLayout: 'auto'
+        width: '180px',
+        fixed: 'left'
     },
     {
         title: 'Destination',
         key: 'destination',
-        dataIndex: 'destination'
+        dataIndex: 'destination',
+        width: '180px'
     },
     {
         title: 'Type',
         key: 'type',
-        dataIndex: 'type'
+        dataIndex: 'type',
+        width: 100
+    },
+    {
+        title: 'Single supplement',
+        key: 'single_supplement',
+        dataIndex: 'single_supplement',
+        width: 150
     },
     {
         title: 'Lux price',
         key: 'lux_price',
         dataIndex: 'lux_price',
+        width: 100
     },
     {
         title: 'Standard price',
         key: 'standard_price',
         dataIndex: 'standard_price',
+        width: 100
     },
     {
         title: 'Staff price',
         key: 'staff_price',
         dataIndex: 'staff_price',
+        width: 100
     },
     {
         title: 'Tourist Meal',
@@ -191,16 +206,19 @@ const columns = [
                 title: 'Breakfast',
                 dataIndex: 'tourist_b',
                 key: 'tourist_b',
+                width: 100
             },
             {
                 title: 'Lunch',
                 dataIndex: 'tourist_l',
                 key: 'tourist_l',
+                width: 100
             },
             {
                 title: 'Dinner',
                 dataIndex: 'tourist_d',
                 key: 'tourist_d',
+                width: 100
             }
         ],
     },
@@ -211,23 +229,33 @@ const columns = [
                 title: 'Breakfast',
                 dataIndex: 'staff_b',
                 key: 'staff_b',
+                width: 100
             },
             {
                 title: 'Lunch',
                 dataIndex: 'staff_l',
                 key: 'staff_l',
+                width: 100
             },
             {
                 title: 'Dinner',
                 dataIndex: 'staff_d',
                 key: 'staff_d',
+                width: 100
             }
         ],
+    },
+    {
+        title: 'Description',
+        dataIndex: 'description',
+        key: 'description',
+        width: 200
     },
     {
         title: 'Action',
         key: 'Action',
         fixed: 'right',
+        width: 100
 
     }
 ]

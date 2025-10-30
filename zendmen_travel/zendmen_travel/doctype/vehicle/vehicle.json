@@ -10,7 +10,8 @@
   "seats",
   "consumption",
   "price",
-  "fuel_cost"
+  "fuel_cost",
+  "description"
  ],
  "fields": [
   {
@@ -38,12 +39,17 @@
    "fieldname": "fuel_cost",
    "fieldtype": "Currency",
    "label": "Fuel cost per km"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-28 15:28:35.963566",
+ "modified": "2025-10-30 16:54:46.966637",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Vehicle",

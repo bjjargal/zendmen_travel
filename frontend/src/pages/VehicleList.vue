@@ -41,6 +41,9 @@
             <a-form-item label="price" name="price">
                 <a-input-number v-model:value="Vehicle.doc.price" addon-after="₮" class="!w-full"></a-input-number>
             </a-form-item>
+            <a-form-item label="Description" name="description">
+                <a-textarea v-model:value="Vehicle.doc.description" :rows="3"></a-textarea>
+            </a-form-item>
             <a-form-item label="Fuel cost per km" name="fuel_cost">
                 <a-input-number v-model:value="Vehicle.doc.fuel_cost" addon-after="₮" class="!w-full"></a-input-number>
             </a-form-item>
@@ -60,6 +63,9 @@
             </a-form-item>
             <a-form-item label="price" name="price">
                 <a-input-number v-model:value="newVehicle.price" addon-after="₮" class="!w-full"></a-input-number>
+            </a-form-item>
+            <a-form-item label="Description" name="description">
+                <a-textarea v-model:value="newVehicle.description" :rows="3"></a-textarea>
             </a-form-item>
             <a-form-item label="Fuel cost per km" name="fuel_cost">
                 <a-input-number v-model:value="newVehicle.fuel_cost" addon-after="₮" class="!w-full"></a-input-number>
@@ -92,7 +98,8 @@ const newVehicle = reactive({
     seats: 1,
     consumption: 0,
     price: 0,
-    fuel_cost:0
+    fuel_cost: 0,
+    description: ''
 
 })
 
@@ -168,6 +175,12 @@ const columns = [
         key: 'price',
         dataIndex: 'price',
     },
+    {
+        title: 'Description',
+        key: 'description',
+        dataIndex: 'description',
+    },
+
     {
         title: 'Action',
         key: 'Action',

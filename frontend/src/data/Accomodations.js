@@ -5,9 +5,9 @@ export const AccommodationsStore = defineStore('AccommodationStore', () => {
     const accomodations = createListResource({
         doctype: 'Accomodation',
         fields: ['name', 'accomodation_name',
-            'lux_price', 'standard_price',
+            'lux_price', 'single_supplement', 'standard_price',
             'staff_price', 'tourist_b', 'tourist_l', 'tourist_d',
-            'staff_b', 'staff_l', 'staff_d', 'type', 'destination'],
+            'staff_b', 'staff_l', 'staff_d', 'type', 'destination', 'description'],
         cache: 'AccomodationsCache',
         auto: true,
         pageLength: 999,

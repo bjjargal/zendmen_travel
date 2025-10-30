@@ -9,6 +9,7 @@
   "naming_series",
   "accomodation_name",
   "lux_price",
+  "single_supplement",
   "standard_price",
   "staff_price",
   "tourist_b",
@@ -18,7 +19,8 @@
   "staff_l",
   "staff_d",
   "destination",
-  "type"
+  "type",
+  "description"
  ],
  "fields": [
   {
@@ -94,12 +96,22 @@
    "fieldtype": "Select",
    "label": "Type",
    "options": "Camping\nHotel\nGer Camp\nNot included"
+  },
+  {
+   "fieldname": "single_supplement",
+   "fieldtype": "Currency",
+   "label": "Single Supplement"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-29 15:38:43.421603",
+ "modified": "2025-10-30 16:39:08.786153",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Accomodation",
