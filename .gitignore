@@ -5,3 +5,6 @@
 tags
 node_modules
 __pycache__
+zendmen_travel/public/frontend/index.html
+zendmen_travel/public/frontend/assets
+zendmen_travel/www/zendmen.html
