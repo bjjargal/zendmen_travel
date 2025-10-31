@@ -26,7 +26,8 @@
             <template v-else>
                 <div v-if="editingKeys.has(record.name)" class="editable-cell-edit">
                     <template v-if="column.dataIndex === 'destination'">
-                        <a-select v-model:value="record[column.dataIndex]" :options="destinationOptions"
+                        <a-select v-model:value="record[column.dataIndex]" :options="destinationOptions" allow-clear
+                            @change="(value) => value === undefined ? record[column.dataIndex] = '' : record[column.dataIndex] = value"
                             style="width: 100%" />
                     </template>
                     <template v-else-if="column.dataIndex === 'type'">
@@ -173,7 +174,7 @@ const columns = [
         title: 'Type',
         key: 'type',
         dataIndex: 'type',
-        width: 100
+        width: 150
     },
     {
         title: 'Single supplement',

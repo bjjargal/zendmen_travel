@@ -10,6 +10,10 @@ class Quotation(Document):
     def before_insert(self):
         self.get_tour(self.tour)
 
+    def validate(self):
+        self.total_min_price = sum([i.min_price for i in self.accomodation])
+        self.total_max_price = sum([i.max_price for i in self.accomodation])
+
     @frappe.whitelist()
     def get_tour(self,tour_name):
         try:
@@ -41,7 +45,6 @@ class Quotation(Document):
                 )
             for i in tour.attractions:
                 self.append("attractions", {"attraction": i.attraction, "day": i.day})
-
 
         except:
             self.log_error("get tour error", frappe.get_traceback())

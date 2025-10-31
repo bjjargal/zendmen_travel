@@ -1,8 +1,8 @@
 <template>
-    <div class="min-h-screen">
-        <a-page-header class="!p-0 mb-3 px-4 py-2 sticky top-0 z-10" :title="'Quotation'" @back="() => $router.go(-1)">
+    <div class="h-full flex flex-col">
+        <a-page-header class="!p-0 mb-3 px-4 py-2" :title="'Quotation'" @back="() => $router.go(-1)">
             <template #tags>
-                <a-tag v-if="quotation?.isDirty" color="orange">Not saved</a-tag>
+                <a-tag v-if="quotation.isDirty" color="orange">Not saved</a-tag>
             </template>
             <template #extra>
                 <a-space>
@@ -10,238 +10,318 @@
                 </a-space>
             </template>
         </a-page-header>
-        <a-spin v-if="quotation.get.loading" tip="Loading..." class="block mt-20" />
-
-        <div v-else class="flex flex-col lg:flex-row h-full bg-white">
-            <div class="w-full lg:w-[28%] p-4 flex flex-col gap-2">
-                <a-form layout="vertical" class="w-full space-y-1">
-                    <a-form-item label="Tour" name="tour">
-                        <a-select v-model:value="quotation.doc.tour" placeholder="Select tour" :options="tourOptions" />
-                    </a-form-item>
-                    <a-form-item label="Categoty" name="category">
-                        <a-select v-model:value="quotation.doc.category" placeholder="Select category"
-                            :options="categotyOptions" />
-                    </a-form-item>
-                    <a-form-item label="Duration" name="duration">
-                        <a-input-number v-model:value="quotation.doc.duration" :min="1" :max="30" class="!w-full"
-                            addon-after="Days" />
-                    </a-form-item>
-                    <a-form-item label="Group Size" name="group_size">
-                        <a-space>
-                            <a-input-number v-model:value="quotation.doc.min_people" :min="1" :max="20"
-                                placeholder="min" class="!w-full" />
-                            <a-input-number v-model:value="quotation.doc.max_people" :min="1" :max="20"
-                                placeholder="max" class="!w-full" />
-                        </a-space>
-                    </a-form-item>
-                    <a-form-item label="Total Distance" name="total_distance">
-                        <a-input-number v-model:value="quotation.doc.total_distance" addon-after="km" class="!w-full" />
-                    </a-form-item>
-                </a-form>
-            </div>
-            <div class="flex-1 p-4 overflow-x-hidden overflow-y-auto">
-                <a-tabs v-model:activeKey="current" tab-position="top" type="card">
-                    <a-tab-pane v-for="day in quotation.doc.duration" :key="day" :tab="`Day ${day}`">
-                        <a-form v-for="(a, idx) in quotation.doc.accomodation.filter(
-                            (acc) => acc.day === day,
-                        )" :key="`form-${idx}`" layout="vertical"
-                            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                            <a-form-item label="Destination" name="destination">
-                                <a-select v-model:value="a.destination" :options="destinationOptions" allow-clear
-                                    placeholder="Select destination" />
+        <div class="w-full flex-1 overflow-y-auto mt-2 pb-28">
+            <a-spin :spinning="quotation.get.loading" :delay="500" tip="Loading..." class="block mt-20">
+                <div v-if="!quotation.get.loading" class=" flex flex-col gap-2">
+                    <a-card>
+                        <a-form layout="vertical" class="w-full grid grid-cols-2 gap-2">
+                            <a-form-item label="Tour" name="tour">
+                                <a-select v-model:value="quotation.doc.tour" placeholder="Select tour"
+                                    :options="tourOptions" />
                             </a-form-item>
-                            <a-form-item label="Accomodation" name="accomodation">
-                                <a-select v-model:value="a.accomodation" :options="accomodationOptions" allow-clear />
+                            <a-form-item label="Categoty" name="category">
+                                <a-select v-model:value="quotation.doc.category" placeholder="Select category"
+                                    :options="categotyOptions" />
                             </a-form-item>
-                            <a-form-item label="Distance" name="distance">
-                                <a-input-number v-model:value="a.distance" addon-after="km" class="!w-full" />
+                            <a-form-item label="Duration" name="duration">
+                                <a-input-number v-model:value="quotation.doc.duration" :min="1" :max="30"
+                                    class="!w-full" addon-after="Days" />
                             </a-form-item>
-                            <a-form-item label="Meals" name="meals">
-                                <a-space direction="vertical">
-                                    <a-checkbox :checked="!!a.breakfast"
-                                        @update:checked="a.breakfast = !a.breakfast">Breakfast</a-checkbox>
-                                    <a-checkbox :checked="!!a.lunch"
-                                        @update:checked="a.lunch = !a.lunch">Lunch</a-checkbox>
-                                    <a-checkbox :checked="!!a.dinner"
-                                        @update:checked="a.dinner = !a.dinner">Dinner</a-checkbox>
+                            <a-form-item label="Group size">
+                                <a-space>
+                                    <a-form-item name="min_people">
+                                        <a-input-number v-model:value="quotation.doc.min_people" :min="1"
+                                            placeholder="min" style="width: 100%;" />
+                                    </a-form-item>
+                                    <a-form-item name="max_people">
+                                        <a-input-number v-model:value="quotation.doc.max_people" :min="1"
+                                            placeholder="max" style="width: 100%;" />
+                                    </a-form-item>
                                 </a-space>
                             </a-form-item>
-                            <a-form-item label="Activities" name="activities">
-                                <a-checkbox-group v-model:value="dayActivity"
-                                    :options="getActivityOptions(a.destination)" />
+
+                            <a-form-item label="Total Distance" name="total_distance">
+                                <a-input-number v-model:value="quotation.doc.total_distance" addon-after="km"
+                                    class="!w-full" />
                             </a-form-item>
-                            <a-form-item label="Attractions" name="attractions">
-                                <a-checkbox-group v-model:value="dayAttraction"
-                                    :options="getAttractionOptions(a.destination)" />
+                            <a-form-item label="Total minimum price" mame="total_min_price">
+                                <a-input-number v-model:value="quotation.doc.total_min_price"
+                                    :formatter="numberFormatter" :parser="numberParser" addon-after="₮"
+                                    class="!w-full" />
                             </a-form-item>
-                            <a-form-item label="Min price" name="min_price">
-                                <a-input :disabled="true" v-model:value="a.min_price"></a-input>
-                            </a-form-item>
-                            <a-form-item label="Max price" name="max_price">
-                                <a-input :disabled="true" v-model:value="a.max_price"></a-input>
-                            </a-form-item>
-                        </a-form>
-                        <a-form layout="vertical">
-                            <a-form-item label="vehicles" name="Vehicles">
-                                <a-table :columns="vehicleColumns" :pagination="false"
-                                    :data-source="quotation.doc.vehicle?.filter(v => v.day === day) || []">
-                                    <template #bodyCell="{ column, record }">
-                                        <template v-if="column.dataIndex === 'vehicle'">
-                                            <a-select v-model:value="record.vehicle" :options="vehicleOptions"
-                                                @select="getVehicle(record)" class="!w-full" />
-                                        </template>
-                                        <template v-if="column.dataIndex === 'seats'">
-                                            <a-input-number v-model:value="record.seats" class="!w-full" />
-                                        </template>
-                                        <template v-if="column.dataIndex === 'count'">
-                                            <a-input-number v-model:value="record.count" class="!w-full" />
-                                        </template>
-                                        <template v-if="column.dataIndex === 'consumption'">
-                                            <a-input-number v-model:value="record.consumption" class="!w-full"
-                                                addon-after="L" />
-                                        </template>
-                                        <template v-if="column.dataIndex === 'price'">
-                                            <a-input-number v-model:value="record.price" class="!w-full"
-                                                addon-after="₮" />
-                                        </template>
-                                        <template v-if="column.dataIndex === 'distance'">
-                                            <a-input-number v-model:value="record.distance" class="!w-full"
-                                                :status="record.distance === 0 || record.distance === null || record.distance === undefined ? 'error' : ''"
-                                                addon-after="km" />
-                                        </template>
-                                        <template v-if="column.dataIndex === 'fuel_cost'">
-                                            <a-input-number v-model:value="record.fuel_cost" class="!w-full"
-                                                addon-after="₮" />
-                                        </template>
-                                        <template v-if="column.dataIndex === 'Action'">
-                                            <a-button danger size="small" @click="deleteVehicle(record)">
-                                                <FeatherIcon name="trash" class="size-4" />
-                                            </a-button>
-                                        </template>
-                                    </template>
-                                </a-table>
-                                <a-button class="!mt-3" @click="addVehicle">Add</a-button>
+                            <a-form-item label="Total mmaximum price" name="total_max_price">
+                                <a-input-number v-model:value="quotation.doc.total_max_price"
+                                    :formatter="numberFormatter" :parser="numberParser" addon-after="₮"
+                                    class="!w-full" />
                             </a-form-item>
                         </a-form>
-                        <a-form layout="vertical">
-                            <a-form-item label="Staffs" name="Staffs">
-                                <a-table :columns="staffColumns" :pagination="false"
-                                    :data-source="quotation.doc.staffs?.filter(v => v.day === day) || []">
-                                    <template #bodyCell="{ column, record }">
-                                        <template v-if="column.dataIndex === 'staff'">
-                                            <a-select v-model:value="record.staff" :options="staffOptions"
-                                                @select="getStaff(record)" class="!w-full" />
-                                        </template>
+                    </a-card>
+                    <a-card title="Accomodation" :headStyle="{ borderBottom: 'none', padding: '8px 16px' }">
+                        <a-tabs v-model:activeKey="current" tab-position="top" type="card">
+                            <a-tab-pane v-for="day in quotation.doc.duration" :key="day" :tab="`Day ${day}`">
+                                <div v-for="(a, idx) in quotation.doc.accomodation.filter(
+                                    (acc) => acc.day === day)" :key="`form-${idx}`">
+                                    <a-form layout="vertical"
+                                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                        <a-form-item label="Destination" name="destination">
+                                            <a-select v-model:value="a.destination" :options="destinationOptions"
+                                                allow-clear placeholder="Select destination" />
+                                        </a-form-item>
+                                        <a-form-item label="Accomodation" name="accomodation">
+                                            <a-select v-model:value="a.accomodation" :options="accomodationOptions"
+                                                allow-clear />
+                                        </a-form-item>
+                                        <a-form-item label="Distance" name="distance">
+                                            <a-input-number v-model:value="a.distance" addon-after="km"
+                                                class="!w-full" />
+                                        </a-form-item>
+                                        <a-form-item label="Meals" name="meals">
+                                            <a-space direction="horizontal">
+                                                <a-form-item name="breakfast" class="!p-0">
+                                                    <a-checkbox :checked="!!a.breakfast"
+                                                        @update:checked="a.breakfast = !a.breakfast">Breakfast</a-checkbox>
+                                                </a-form-item>
+                                                <a-form-item name="lunch" class="!p-0">
+                                                    <a-checkbox :checked="!!a.lunch"
+                                                        @update:checked="a.lunch = !a.lunch">Lunch</a-checkbox>
+                                                </a-form-item>
+                                                <a-form-item name="dinner" class="!p-0">
+                                                    <a-checkbox :checked="!!a.dinner"
+                                                        @update:checked="a.dinner = !a.dinner">Dinner</a-checkbox>
+                                                </a-form-item>
+                                            </a-space>
+                                        </a-form-item>
+                                        <a-form-item label="Activities" name="activities">
+                                            <a-checkbox-group v-model:value="dayActivity" id="activities"
+                                                name="activities" :options="getActivityOptions(a.destination)" />
+                                        </a-form-item>
+                                        <a-form-item label="Attractions" :name="`attractions-${idx}`">
+                                            <a-checkbox-group v-model:value="dayAttraction" :id="`attractions-${idx}`"
+                                                :name="`attractions-${idx}`"
+                                                :options="getAttractionOptions(a.destination)" />
+                                        </a-form-item>
+                                        <a-form-item label="Min price" name="min_price">
+                                            <a-input-number :disabled="true" v-model:value="a.min_price"
+                                                :formatter="numberFormatter" :parser="numberParser" addon-after="₮"
+                                                class="!w-full"></a-input-number>
+                                        </a-form-item>
+                                        <a-form-item label="Max price" name="max_price">
+                                            <a-input-number :disabled="true" v-model:value="a.max_price"
+                                                :formatter="numberFormatter" :parser="numberParser" addon-after="₮"
+                                                class="!w-full"></a-input-number>
+                                        </a-form-item>
+                                    </a-form>
+                                    <div class="flex flex-col gap-8">
+                                        <a-card title="Vehicles" size="small"
+                                            :headStyle="{ borderBottom: 'none', padding: '8px 16px' }">
+                                            <template #extra>
+                                                <a-button class="!flex items-center gap-2" @click="addVehicle">
+                                                    <template #icon>
+                                                        <FeatherIcon name="plus" class="size-4" />
+                                                    </template>
+                                                    add vehicle
+                                                </a-button>
+                                            </template>
+                                            <div>
+                                                <a-table :columns="vehicleColumns" :pagination="false"
+                                                    :data-source="quotation.doc.vehicle?.filter(v => v.day === day) || []">
+                                                    <template #bodyCell="{ column, record }">
+                                                        <template v-if="column.dataIndex === 'vehicle'">
+                                                            <a-select v-model:value="record.vehicle"
+                                                                :id="`vehicle-${idx}`" :options="vehicleOptions"
+                                                                @select="getVehicle(record)" class="!w-full" />
+                                                        </template>
+                                                        <template v-if="column.dataIndex === 'seats'">
+                                                            <a-input-number v-model:value="record.seats"
+                                                                :id="`seats-${idx}`" class="!w-full" />
+                                                        </template>
+                                                        <template v-if="column.dataIndex === 'count'">
+                                                            <a-input-number v-model:value="record.count"
+                                                                class="!w-full" />
+                                                        </template>
+                                                        <template v-if="column.dataIndex === 'consumption'">
+                                                            <a-input-number v-model:value="record.consumption"
+                                                                class="!w-full" addon-after="L" />
+                                                        </template>
+                                                        <template v-if="column.dataIndex === 'price'">
+                                                            <a-input-number v-model:value="record.price" class="!w-full"
+                                                                addon-after="₮" :formatter="numberFormatter"
+                                                                :parser="numberParser" />
+                                                        </template>
+                                                        <template v-if="column.dataIndex === 'distance'">
+                                                            <a-input-number v-model:value="record.distance"
+                                                                class="!w-full"
+                                                                :status="record.distance === 0 || record.distance === null || record.distance === undefined ? 'error' : ''"
+                                                                addon-after="km" />
+                                                        </template>
+                                                        <template v-if="column.dataIndex === 'fuel_cost'">
+                                                            <a-input-number v-model:value="record.fuel_cost"
+                                                                class="!w-full" :formatter="numberFormatter"
+                                                                :parser="numberParser" addon-after="₮" />
+                                                        </template>
+                                                        <template v-if="column.dataIndex === 'vehicle_cost'">
+                                                            <a-input-number v-model:value="record.vehicle_cost"
+                                                                :disabled="true" class="!w-full"
+                                                                :formatter="numberFormatter" :parser="numberParser"
+                                                                addon-after="₮" />
+                                                        </template>
+                                                        <template v-if="column.dataIndex === 'Action'">
+                                                            <a-button danger size="small"
+                                                                @click="deleteVehicle(record)">
+                                                                <FeatherIcon name="trash" class="size-4" />
+                                                            </a-button>
+                                                        </template>
+                                                    </template>
+                                                </a-table>
+                                            </div>
+                                        </a-card>
+                                        <a-card title="Staffs" size="small"
+                                            :headStyle="{ borderBottom: 'none', padding: '8px 16px' }">
+                                            <template #extra>
+                                                <a-button class="!flex items-center gap-2" @click="addStaff">
+                                                    <template #icon>
+                                                        <FeatherIcon name="plus" class="size-4" />
+                                                    </template>
+                                                    add staff
+                                                </a-button>
+                                            </template>
+                                            <div>
+                                                <a-table :columns="staffColumns" :pagination="false"
+                                                    :data-source="quotation.doc.staffs?.filter(v => v.day === day) || []">
+                                                    <template #bodyCell="{ column, record }">
+                                                        <template v-if="column.dataIndex === 'staff'">
+                                                            <a-select v-model:value="record.staff"
+                                                                :options="staffOptions" @select="getStaff(record)"
+                                                                class="!w-full" />
+                                                        </template>
 
-                                        <template v-if="column.dataIndex === 'count'">
-                                            <a-input-number v-model:value="record.count" class="!w-full" />
-                                        </template>
+                                                        <template v-if="column.dataIndex === 'count'">
+                                                            <a-input-number v-model:value="record.count"
+                                                                class="!w-full" />
+                                                        </template>
+                                                        <template v-if="column.dataIndex === 'staff_cost'">
+                                                            <a-input-number :disabled="true"
+                                                                :formatter="numberFormatter" :parser="numberParser"
+                                                                v-model:value="record.staff_cost" class="!w-full"
+                                                                addon-after="₮" />
+                                                        </template>
 
-                                        <template v-if="column.dataIndex === 'price'">
-                                            <a-input-number v-model:value="record.price" class="!w-full"
-                                                addon-after="₮" />
-                                        </template>
+                                                        <template v-if="column.dataIndex === 'price'">
+                                                            <a-input-number v-model:value="record.price" class="!w-full"
+                                                                :formatter="numberFormatter" :parser="numberParser"
+                                                                addon-after="₮" />
+                                                        </template>
 
-                                        <template v-if="column.dataIndex === 'Action'">
-                                            <a-button danger size="small" @click="deleteStaff(record)">
-                                                <FeatherIcon name="trash" class="size-4" />
-                                            </a-button>
-                                        </template>
-                                    </template>
-                                </a-table>
-                                <a-button class="!mt-3" @click="addStaff">Add</a-button>
-                            </a-form-item>
-                        </a-form>
-                        <a-form v-for="(a, idx) in quotation.doc.accomodation.filter(
-                            (acc) => acc.day === day,
-                        )" :key="`form-${idx}`" layout="vertical">
-                            <a-form-item label="Tourist accomodation" name="tourist_accomodation">
-                                <a-table :columns="AccommodationColumns" :pagination="false"
-                                    :data-source="quotation.doc.tourist_accomodation?.filter(v => v.day === day) || []">
-                                    <template #bodyCell="{ column, record }">
-                                        <template v-if="column.dataIndex === 'accomodation'">
-                                            <a-select v-model:value="record.accomodation"
-                                                :options="getAccommodationOptions({ destination: a.destination, type: a.accomodation })"
-                                                @select="getAccomodation(record, a)" class="!w-full" />
-                                        </template>
+                                                        <template v-if="column.dataIndex === 'Action'">
+                                                            <a-button danger size="small" @click="deleteStaff(record)">
+                                                                <FeatherIcon name="trash" class="size-4" />
+                                                            </a-button>
+                                                        </template>
+                                                    </template>
+                                                </a-table>
+                                            </div>
 
-                                        <template v-if="column.dataIndex === 'meal'">
-                                            <a-input-number v-model:value="record.meal" class="!w-full" />
-                                        </template>
-                                        <template v-if="column.dataIndex === 'hotel'">
-                                            <a-input-number v-model:value="record.hotel" class="!w-full" />
-                                        </template>
-                                        <template v-if="column.dataIndex === 'vehicle'">
-                                            <a-input-number v-model:value="record.vehicle" class="!w-full" />
-                                        </template>
-                                        <template v-if="column.dataIndex === 'staff'">
-                                            <a-input-number v-model:value="record.staff" class="!w-full" />
-                                        </template>
-                                        <template v-if="column.dataIndex === 'staff_accomodation'">
-                                            <a-input-number v-model:value="record.staff_accomodation" class="!w-full" />
-                                        </template>
+                                        </a-card>
+                                        <a-card title="Tourist accomodation /per tourist/" size="small"
+                                            :headStyle="{ borderBottom: 'none', padding: '8px 16px' }">
+                                            <template #extra>
+                                                <a-button class="!flex items-center gap-2" @click="addAccomodation">
+                                                    <template #icon>
+                                                        <FeatherIcon name="plus" class="size-4" />
+                                                    </template>
+                                                    add accomodation
+                                                </a-button>
+                                            </template>
+                                            <a-table :columns="AccommodationColumns" :pagination="false"
+                                                :data-source="quotation.doc.tourist_accomodation?.filter(v => v.day === day) || []">
+                                                <template #bodyCell="{ column, record }">
+                                                    <template v-if="column.dataIndex === 'accomodation'">
+                                                        <a-select v-model:value="record.accomodation"
+                                                            :options="getAccommodationOptions(a.destination)"
+                                                            @select="getAccomodation(record, a)" class="!w-full" />
+                                                    </template>
+                                                    <template v-if="column.dataIndex === 'meal'">
+                                                        <a-input-number v-model:value="record.meal" class="!w-full"
+                                                            :formatter="numberFormatter" :parser="numberParser"
+                                                            addon-after="₮" />
+                                                    </template>
+                                                    <template v-if="column.dataIndex === 'hotel'">
+                                                        <a-input-number v-model:value="record.hotel" class="!w-full"
+                                                            :formatter="numberFormatter" :parser="numberParser"
+                                                            addon-after="₮" />
+                                                    </template>
+                                                    <template v-if="column.dataIndex === 'staff_accomodation'">
+                                                        <a-input-number v-model:value="record.staff_accomodation"
+                                                            :formatter="numberFormatter" :parser="numberParser"
+                                                            addon-after="₮" class="!w-full" />
+                                                    </template>
+                                                    <template v-if="column.dataIndex === 'total'">
+                                                        <a-input-number v-model:value="record.total" :disabled="true"
+                                                            :formatter="numberFormatter" :parser="numberParser"
+                                                            addon-after="₮" class="!w-full" />
+                                                    </template>
+                                                    <template v-if="column.dataIndex === 'Action'">
+                                                        <a-button danger size="small"
+                                                            @click="deleteAccomodation(record)">
+                                                            <FeatherIcon name="trash" class="size-4" />
+                                                        </a-button>
+                                                    </template>
+                                                </template>
+                                            </a-table>
+                                        </a-card>
+                                        <a-card title="Activities" size="small"
+                                            :headStyle="{ borderBottom: 'none', padding: '8px 16px' }">
+                                            <a-table :columns="ActivityColumns" :pagination="false"
+                                                :data-source="quotation.doc.activities?.filter(v => v.day === day) || []">
+                                                <template #bodyCell="{ column, record }">
+                                                    <template v-if="column.dataIndex === 'activity_name'">
+                                                        <a-select v-model:value="record.activity_name" :disabled="true"
+                                                            @select="getActivity(record)" class="!w-full" />
+                                                    </template>
+                                                    <template v-if="column.dataIndex === 'cost'">
+                                                        <a-input-number v-model:value="record.cost" class="!w-full"
+                                                            :formatter="numberFormatter" :parser="numberParser"
+                                                            addon-after="₮" />
+                                                    </template>
+                                                    <template v-if="column.dataIndex === 'Action'">
+                                                        <a-button danger size="small" @click="deleteActivity(record)">
+                                                            <FeatherIcon name="trash" class="size-4" />
+                                                        </a-button>
+                                                    </template>
+                                                </template>
+                                            </a-table>
+                                        </a-card>
+                                        <a-card title="Attractions" size="small"
+                                            :headStyle="{ borderBottom: 'none', padding: '8px 16px' }">
+                                            <a-table :columns="AttractionColumns" :pagination="false"
+                                                :data-source="quotation.doc.attractions?.filter(v => v.day === day) || []">
+                                                <template #bodyCell="{ column, record }">
+                                                    <template v-if="column.dataIndex === 'attraction'">
+                                                        <a-select v-model:value="record.attraction" :options="[]"
+                                                            :disabled="true" class="!w-full" />
+                                                    </template>
 
-                                        <template v-if="column.dataIndex === 'Action'">
-                                            <a-button danger size="small" @click="deleteAccomodation(record)">
-                                                <FeatherIcon name="trash" class="size-4" />
-                                            </a-button>
-                                        </template>
-                                    </template>
-                                </a-table>
-                                <a-button class="!mt-3" @click="addAccomodation">Add</a-button>
-                            </a-form-item>
-                        </a-form>
-                        <a-form layout="vertical">
-                            <a-form-item label="Activity Price" name="activities">
-                                <a-table :columns="ActivityColumns" :pagination="false"
-                                    :data-source="quotation.doc.activities?.filter(v => v.day === day) || []">
-                                    <template #bodyCell="{ column, record }">
-                                        <template v-if="column.dataIndex === 'activity_name'">
-                                            <a-select v-model:value="record.activity_name" :options="[]"
-                                                @select="getActivity(record)" class="!w-full" />
-                                        </template>
+                                                    <template v-if="column.dataIndex === 'cost'">
+                                                        <a-input-number v-model:value="record.cost" class="!w-full"
+                                                            :formatter="numberFormatter" :parser="numberParser"
+                                                            addon-after="₮" />
+                                                    </template>
 
-                                        <template v-if="column.dataIndex === 'cost'">
-                                            <a-input-number v-model:value="record.cost" class="!w-full" />
-                                        </template>
-
-                                        <template v-if="column.dataIndex === 'Action'">
-                                            <a-button danger size="small" @click="deleteActivity(record)">
-                                                <FeatherIcon name="trash" class="size-4" />
-                                            </a-button>
-                                        </template>
-                                    </template>
-                                </a-table>
-                                <a-button class="!mt-3" @click="addActivity">Add</a-button>
-                            </a-form-item>
-                        </a-form>
-                        <a-form layout="vertical">
-                            <a-form-item label="Attraction Price" name="attractions">
-                                <a-table :columns="AttractionColumns" :pagination="false"
-                                    :data-source="quotation.doc.attractions?.filter(v => v.day === day) || []">
-                                    <template #bodyCell="{ column, record }">
-                                        <template v-if="column.dataIndex === 'attraction'">
-                                            <a-select v-model:value="record.attraction" :options="[]"
-                                                @select="getAttraction(record)" class="!w-full" />
-                                        </template>
-
-                                        <template v-if="column.dataIndex === 'cost'">
-                                            <a-input-number v-model:value="record.cost" class="!w-full" />
-                                        </template>
-
-                                        <template v-if="column.dataIndex === 'Action'">
-                                            <a-button danger size="small" @click="deleteAttraction(record)">
-                                                <FeatherIcon name="trash" class="size-4" />
-                                            </a-button>
-                                        </template>
-                                    </template>
-                                </a-table>
-                                <a-button class="!mt-3" @click="addAttraction">Add</a-button>
-                            </a-form-item>
-                        </a-form>
-                    </a-tab-pane>
-                </a-tabs>
-            </div>
+                                                    <template v-if="column.dataIndex === 'Action'">
+                                                        <a-button danger size="small" @click="deleteAttraction(record)">
+                                                            <FeatherIcon name="trash" class="size-4" />
+                                                        </a-button>
+                                                    </template>
+                                                </template>
+                                            </a-table>
+                                        </a-card>
+                                    </div>
+                                </div>
+                            </a-tab-pane>
+                        </a-tabs>
+                    </a-card>
+                </div>
+            </a-spin>
         </div>
     </div>
 </template>
@@ -251,14 +331,14 @@ import { createDocumentResource } from "frappe-ui";
 import { ref, computed, watch, watchEffect } from "vue";
 import { DestinationStore } from "@/data/destinations";
 import { ActivityStore } from "@/data/Activities";
-import { message } from "ant-design-vue";
+import { LayoutContent, message } from "ant-design-vue";
 import { ActivityDesStore } from "@/data/ActivityDestination";
 import { AttractionsStore } from "@/data/Attraction";
 import { vehicleStore } from "@/data/Vehicle";
 import { tourStore } from "@/data/Tour";
 import { staffStore } from "@/data/Staff";
 import { AccommodationsStore } from "@/data/Accomodations";
-
+import QuotationSubTable from "@/components/QuotationSubTable.vue";
 const props = defineProps({
     name: {
         type: String,
@@ -274,23 +354,30 @@ const { tours } = tourStore()
 const { staffs } = staffStore()
 const { accomodations } = AccommodationsStore()
 
-const getAccommodationOptions = (filters = {}) => {
+const getAccommodationOptions = (destination) => {
     if (!accomodations?.data) return [];
 
-    return accomodations.data
-        .filter((item) =>
-            Object.entries(filters).every(([key, value]) => {
-                if (!value) return true; // ignore empty filters
-                return item[key] === value;
-            })
-        )
-        .map((item) => ({
+    const filtered = accomodations.data.filter(
+        (item) => !item.destination || item.destination === destination
+    );
+
+    const grouped = filtered.reduce((groups, item) => {
+        if (!groups[item.type]) {
+            groups[item.type] = [];
+        }
+        groups[item.type].push({
             label: item.accomodation_name,
             value: item.name,
-        }));
+        });
+        return groups;
+    }, {});
+
+    return Object.entries(grouped).map(([type, options]) => ({
+        label: type,
+        options,
+    }));
 };
 
-console.log(accomodations?.data)
 
 const staffOptions = computed(() => {
     return staffs?.data.map((item) => ({
@@ -418,6 +505,11 @@ const dayActivity = computed({
 });
 
 const current = ref(1);
+
+const currentAccomodation = computed(() => {
+    quotation?.doc?.accomodation?.find(acc => acc.day === current.value) || {}
+})
+
 watch(
     () => quotation?.doc?.duration,
     (duration) => {
@@ -485,20 +577,6 @@ const addAccomodation = () => {
         count: 0,
     });
 }
-const addActivity = () => {
-    quotation.doc.activities.push({
-        day: current.value,
-        activity_name: "",
-        cost: 0,
-    });
-}
-const addAttraction = () => {
-    quotation.doc.attractions.push({
-        day: current.value,
-        attraction: "",
-        cost: 0,
-    });
-}
 
 const deleteVehicle = (record) => {
     if (!quotation.doc.vehicle || !Array.isArray(quotation.doc.vehicle)) return;
@@ -558,7 +636,6 @@ const getVehicle = (record) => {
     record.consumption = vec.consumption
     record.price = vec.price
     record.fuel_cost = vec.fuel_cost
-
 };
 const getStaff = (record) => {
     if (!record.staff) return;
@@ -570,12 +647,6 @@ const getAccomodation = (record, dayAcc) => {
     const acco = accomodations.data.find(item => item.name === record.accomodation);
     record.meal = (dayAcc.breakfast ? acco.tourist_b : 0) + (dayAcc.lunch ? acco.tourist_l : 0) + (dayAcc.dinner ? acco.tourist_d : 0)
     record.hotel = quotation.doc.category === 'Luxury' ? acco.lux_price : acco.standard_price
-    // record.vehicle = (quotation.doc.vehicle
-    //     ?.filter(v => v.day === current.value)
-    //     .reduce((sum, v) => sum + (Number(v.vehicle_cost) || 0), 0) || 0) / quotation.doc.min_people;
-    // record.staff = (quotation.doc.staffs
-    //     ?.filter(v => v.day === current.value)
-    //     .reduce((sum, v) => sum + (Number(v.staff_cost) || 0), 0) || 0) / quotation.doc.min_people;
     const staff_count = record.staffs = (quotation.doc.staffs
         ?.filter(v => v.day === current.value)
         .reduce((sum, v) => sum + (Number(v.count) || 0), 0) || 0);
@@ -611,13 +682,13 @@ watchEffect(() => {
 
         // Sum vehicle costs for the day
         const sum_vehicle = (quotation.doc.vehicle || []).filter((v) => v.day === day).reduce((sum, v) => sum + (v.vehicle_cost || 0), 0);
-        const vehicle_per_min = sum_vehicle / max_people; // Lower per person when group is larger
-        const vehicle_per_max = sum_vehicle / min_people; // Higher per person when group is smaller
+        const vehicle_per_min = sum_vehicle / min_people; // Lower per person when group is larger
+        const vehicle_per_max = sum_vehicle / max_people; // Higher per person when group is smaller
 
         // Sum staff costs for the day
         const sum_staff = (quotation.doc.staffs || []).filter((s) => s.day === day).reduce((sum, s) => sum + (s.staff_cost || 0), 0);
-        const staff_per_min = sum_staff / max_people;
-        const staff_per_max = sum_staff / min_people;
+        const staff_per_min = sum_staff / min_people;
+        const staff_per_max = sum_staff / max_people;
 
         // Sum tourist accommodation totals for the day (assumed already per person)
         const sum_tourist = (quotation.doc.tourist_accomodation || []).filter((t) => t.day === day).reduce((sum, t) => sum + (t.total || 0), 0);
@@ -670,11 +741,13 @@ const vehicleColumns = [
         title: 'Vehicle cost',
         key: 'vehicle_cost',
         dataIndex: 'vehicle_cost',
+        width: 200
     },
     {
         title: 'Action',
         key: 'Action',
         dataIndex: 'Action',
+        width: 100
     },
 ]
 const staffColumns = [
@@ -703,6 +776,7 @@ const staffColumns = [
         title: 'Action',
         key: 'Action',
         dataIndex: 'Action',
+        width: 100
     },
 ]
 const AccommodationColumns = [
@@ -710,6 +784,7 @@ const AccommodationColumns = [
         title: 'Accomodation',
         key: 'accomodation',
         dataIndex: 'accomodation',
+        width: 250
     },
     {
         title: 'Meal',
@@ -721,18 +796,8 @@ const AccommodationColumns = [
         key: 'hotel',
         dataIndex: 'hotel',
     },
-    // {
-    //     title: 'Vehicle',
-    //     key: 'vehicle',
-    //     dataIndex: 'vehicle',
-    // },
-    // {
-    //     title: 'Staff',
-    //     key: 'staff',
-    //     dataIndex: 'staff',
-    // },
     {
-        title: 'Staff Accomodation',
+        title: 'Staff Accomodation per tourist',
         key: 'staff_accomodation',
         dataIndex: 'staff_accomodation',
     },
@@ -745,6 +810,8 @@ const AccommodationColumns = [
         title: 'Action',
         key: 'Action',
         dataIndex: 'Action',
+        width: 100,
+
     },
 ]
 
@@ -763,6 +830,7 @@ const ActivityColumns = [
         title: 'Action',
         key: 'Action',
         dataIndex: 'Action',
+        width: 100
     },
 ]
 const AttractionColumns = [
@@ -780,9 +848,19 @@ const AttractionColumns = [
         title: 'Action',
         key: 'Action',
         dataIndex: 'Action',
+        width: 100
     },
 ]
 
+const numberFormatter = (value) => {
+    if (value === undefined || value === null) return '';
+    return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+const numberParser = (value) => {
+    if (!value) return '';
+    return value.replace(/,/g, '');
+};
 
 
 </script>

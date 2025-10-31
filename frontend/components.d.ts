@@ -14,6 +14,7 @@ declare module 'vue' {
     Fields: typeof import('./src/components/Fields.vue')['default']
     Listview: typeof import('./src/components/Listview.vue')['default']
     Notifications: typeof import('./src/components/Notifications.vue')['default']
+    QuotationSubTable: typeof import('./src/components/QuotationSubTable.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Section: typeof import('./src/components/Section.vue')['default']
