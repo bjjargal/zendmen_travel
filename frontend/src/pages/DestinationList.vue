@@ -1,49 +1,97 @@
 <template>
 	<div class="min-h-screen bg-gray-50">
 		<!-- HEADER -->
-		<a-page-header class="!p-0 mb-4 bg-white px-4 py-3 sticky top-0 z-10" title="Destinations">
+		<a-page-header class="!p-0 mb-2 bg-white px-4 py-3 sticky top-0 z-10" title="Destinations">
 			<template #extra>
-				<a-button type="primary" @click="handleCreate">Create Destination</a-button>
+				<a-button type="primary" @click="createOpen = true">Create Destination</a-button>
 			</template>
 		</a-page-header>
 
-		<a-table :columns="columns" :data-source="destinations.data" :loading="destinations.list.loading"
-			:pagination="false" row-key="name" size="middle" :scroll="{ x: false }" class="bg-white mx-2 sm:mx-4">
-			<template #bodyCell="{ column, record }">
-				<template v-if="column.key === 'Action'">
-					<div class="flex justify-cente items-center gap-2">
-						<a-button @click="editDestination(record.name)" type="text"
-							class="!flex justify-center items-center text-blue-500 hover:text-blue-600 !p-0">
-							<FeatherIcon name="edit" class="w-4 h-4" />
-						</a-button>
+		<div class="overflow-x-auto">
+			<a-table :columns="columns" :data-source="destinations.data" :loading="destinations.list.loading"
+				:pagination="false" row-key="name" size="middle" :scroll="{ x: 800, y: 'calc(100vh - 280px)' }"
+				class="bg-white mx-2 sm:mx-4">
+				<template #bodyCell="{ column, record }">
+					<template v-if="column.key === 'Action'">
+						<div class="flex justify-center items-center gap-2">
+							<a-button @click="editDestination(record.name)" type="text"
+								class="!flex justify-center items-center text-blue-500 hover:text-blue-600 !p-0">
+								<FeatherIcon name="edit" class="w-4 h-4" />
+							</a-button>
 
-						<a-button @click="deleteDestination(record.name)" type="text" danger
-							class="!flex justify-center items-center text-red-500 hover:text-red-600 !p-0">
-							<FeatherIcon name="trash-2" class="w-4 h-4" />
-						</a-button>
-					</div>
+							<a-button @click="deleteDestination(record.name)" type="text" danger
+								class="!flex justify-center items-center text-red-500 hover:text-red-600 !p-0">
+								<FeatherIcon name="trash-2" class="w-4 h-4" />
+							</a-button>
+						</div>
+					</template>
 				</template>
-			</template>
-		</a-table>
+			</a-table>
+		</div>
 
-		<!-- DESTINATION MODAL -->
-		<a-modal v-model:open="open" :width="'95%'" :title="`Destination: ${formModel?.destination_name || ''}`"
-			okText="Save" @ok="handleSave" :confirm-loading="saving" @cancel="handleCancel" centered>
+		<!-- CREATE DESTINATION MODAL -->
+		<a-modal v-model:open="createOpen" title="New Destination" okText="Create" @ok="handleCreateSave"
+			:confirm-loading="saving" @cancel="handleCancelCreate" centered>
 			<div class="flex flex-col lg:flex-row gap-6">
 				<!-- LEFT SIDE FORM -->
 				<div class="flex-1 space-y-3">
-					<a-form :form="createFormRef" :model="formModel" :rules="formRules" layout="vertical">
+					<a-form :model="createFormModel" layout="vertical">
 						<a-form-item label="Destination Name" name="destination_name">
-							<a-input v-model:value="formModel.destination_name" placeholder="Enter destination name" />
+							<a-input v-model:value="createFormModel.destination_name"
+								placeholder="Enter destination name" />
 						</a-form-item>
 
 						<a-form-item label="Description" name="description">
-							<a-textarea :rows="4" v-model:value="formModel.description"
+							<a-textarea :rows="4" v-model:value="createFormModel.description"
 								placeholder="Enter description" />
 						</a-form-item>
 
 						<a-form-item label="Image Title" name="image_title">
-							<a-input v-model:value="formModel.image_title" placeholder="Enter image title" />
+							<a-input v-model:value="createFormModel.image_title" placeholder="Enter image title" />
+						</a-form-item>
+					</a-form>
+					<div class=" flex flex-col">
+						<FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false"
+							@success="handleCreateFileUpload" class="border-none">
+							<template #default="{ openFileSelector }">
+								<div class="rounded-lg overflow-hidden cursor-pointer bg-gray-100 hover:bg-gray-200 transition"
+									@click="openFileSelector">
+									<img v-if="createFormModel?.image" :src="createFormModel.image" alt="preview"
+										class="w-full h-64 object-cover" />
+									<div v-else class="h-64 flex items-center justify-center text-gray-500 text-sm">
+										Upload Destination Image
+									</div>
+								</div>
+							</template>
+						</FileUploader>
+					</div>
+				</div>
+
+				<!-- RIGHT SIDE IMAGE UPLOAD -->
+
+			</div>
+		</a-modal>
+
+		<!-- EDIT DESTINATION MODAL -->
+		<a-modal v-model:open="editOpen" :width="'95%'"
+			:title="`Edit Destination: ${destination.doc?.destination_name || ''}`" okText="Save" @ok="handleEditSave"
+			:confirm-loading="saving" @cancel="handleCancelEdit" centered>
+			<div class="flex flex-col lg:flex-row gap-6">
+				<!-- LEFT SIDE FORM -->
+				<div class="flex-1 space-y-3">
+					<a-form :model="destination.doc" layout="vertical">
+						<a-form-item label="Destination Name" name="destination_name">
+							<a-input v-model:value="destination.doc.destination_name"
+								placeholder="Enter destination name" />
+						</a-form-item>
+
+						<a-form-item label="Description" name="description">
+							<a-textarea :rows="4" v-model:value="destination.doc.description"
+								placeholder="Enter description" />
+						</a-form-item>
+
+						<a-form-item label="Image Title" name="image_title">
+							<a-input v-model:value="destination.doc.image_title" placeholder="Enter image title" />
 						</a-form-item>
 
 						<div class="pt-2">
@@ -115,12 +163,12 @@
 
 				<!-- RIGHT SIDE IMAGE UPLOAD -->
 				<div class="lg:w-[40%] flex flex-col">
-					<FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false" @success="handleFileUpload"
+					<FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false" @success="handleEditFileUpload"
 						class="border-none">
 						<template #default="{ openFileSelector }">
 							<div class="rounded-lg overflow-hidden cursor-pointer bg-gray-100 hover:bg-gray-200 transition"
 								@click="openFileSelector">
-								<img v-if="formModel?.image" :src="formModel.image" alt="preview"
+								<img v-if="destination.doc?.image" :src="destination.doc.image" alt="preview"
 									class="w-full h-64 object-cover" />
 								<div v-else class="h-64 flex items-center justify-center text-gray-500 text-sm">
 									Upload Destination Image
@@ -134,8 +182,7 @@
 			<!-- ATTRACTION MODAL -->
 			<a-modal v-model:open="attractionOpen" title="Add Attraction" @ok="handleSaveAttraction"
 				:confirm-loading="attractionSaving" @cancel="handleCancelAttraction" :width="'420px'" centered>
-				<a-form :form="attractionFormRef" :model="newAttractionForm" :rules="attractionFormRules"
-					layout="vertical">
+				<a-form :model="newAttractionForm" layout="vertical">
 					<a-form-item label="Attraction Name" name="attraction_name">
 						<a-input v-model:value="newAttractionForm.attraction_name"
 							placeholder="Enter attraction name" />
@@ -159,7 +206,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, nextTick, computed } from "vue";
+import { ref, reactive, computed } from "vue";
 import { message } from "ant-design-vue";
 import { DestinationStore } from "@/data/destinations";
 import { AttractionsStore } from "@/data/Attraction";
@@ -182,12 +229,11 @@ const attractionTypes = [
 		value: "Monument",
 	},
 ];
-const open = ref(false);
-const imageOpen = ref(false);
+const createOpen = ref(false);
+const editOpen = ref(false);
 const attractionOpen = ref(false);
 const saving = ref(false);
 const attractionSaving = ref(false);
-const isCreate = ref(false);
 const destinationName = ref("");
 const editableData = reactive({});
 
@@ -197,35 +243,31 @@ const destination = createDocumentResource({
 	auto: false,
 });
 
-const createFormRef = ref(null);
-const imageFormRef = ref(null);
-const attractionFormRef = ref(null);
-const formModel = ref(null);
+const createFormModel = reactive({
+	destination_name: "",
+	description: "",
+	image_title: "",
+	image: ""
+});
 
-const newImageForm = reactive({ title: "", image: "" });
-
-const newAttractionForm = reactive({ attraction_name: "", type: "" });
-
-const formRules = {
-	destination_name: [{ required: true, message: "Please enter destination name" }],
-};
-const imageFormRules = {
-	title: [{ required: true, message: "Please enter image title" }],
-};
-const attractionFormRules = {
-	attraction_name: [{ required: true, message: "Please enter attraction name" }],
-	type: [{ required: true, message: "Please select type" }],
-};
+const newAttractionForm = reactive({
+	attraction_name: "",
+	cost: 0,
+	type: "",
+	description: "",
+	destination: ""
+});
 
 // Filtered attractions computed
 const filteredAttractions = computed(() => {
-	const currentDestName = formModel.value?.name || "";
+	const currentDestName = destination.doc?.name || "";
 	return attractions.data.filter((attr) => attr.destination === currentDestName);
 });
 
 // TABLE COLUMNS
 const columns = [
 	{ title: "Destination Name", key: "destination_name", dataIndex: "destination_name" },
+	{ title: "Description", key: "description", dataIndex: "description" },
 	{ title: "Action", key: "Action", width: "15%" },
 ];
 
@@ -237,24 +279,59 @@ const attractionColumns = [
 	{ title: "Action", key: "Action" },
 ];
 
-// DESTINATION CRUD
-const handleCreate = async () => {
-	isCreate.value = true;
-	formModel.value = reactive({ destination_name: "", description: "", images: [] });
-	open.value = true;
+// CREATE DESTINATION
+const handleCreateSave = async () => {
+	try {
+		saving.value = true;
+		await destinations.insert.submit({ ...createFormModel });
+		message.success("Destination created successfully");
+		await destinations.reload();
+		createOpen.value = false;
+	} catch (error) {
+		message.error(error.message || "Failed to create destination");
+	} finally {
+		saving.value = false;
+	}
 };
 
+const handleCancelCreate = () => {
+	createOpen.value = false;
+	Object.assign(createFormModel, {
+		destination_name: "",
+		description: "",
+		image_title: "",
+		image: ""
+	});
+};
+
+// EDIT DESTINATION
 const editDestination = async (name) => {
 	try {
-		isCreate.value = false;
 		destinationName.value = name;
 		destination.name = name;
 		await destination.reload();
-		formModel.value = destination.doc;
-		open.value = true;
+		editOpen.value = true;
 	} catch (error) {
 		message.error(error.message);
 	}
+};
+
+const handleEditSave = async () => {
+	try {
+		saving.value = true;
+		await destination.save.submit();
+		message.success("Destination updated successfully");
+		await destinations.reload();
+		editOpen.value = false;
+	} catch (error) {
+		message.error(error.message || "Failed to save");
+	} finally {
+		saving.value = false;
+	}
+};
+
+const handleCancelEdit = () => {
+	editOpen.value = false;
 };
 
 const deleteDestination = async (name) => {
@@ -267,34 +344,22 @@ const deleteDestination = async (name) => {
 	}
 };
 
-const handleSave = async () => {
-	try {
-		saving.value = true;
-		if (isCreate.value) {
-			await destinations.insert.submit({ ...formModel.value });
-			message.success("Destination created successfully");
-		} else {
-			await destination.save.submit();
-			message.success("Destination updated successfully");
-		}
-		await destinations.reload();
-		open.value = false;
-	} catch (error) {
-		message.error(error.message || "Failed to save");
-	} finally {
-		saving.value = false;
-	}
+// IMAGE HANDLERS
+const handleCreateFileUpload = (file) => {
+	createFormModel.image = file.file_url;
 };
 
-const handleCancel = () => {
-	open.value = false;
+const handleEditFileUpload = (file) => {
+	destination.doc.image = file.file_url;
 };
 
 // ATTRACTION CRUD
 const handleAddAttraction = () => {
 	newAttractionForm.attraction_name = "";
+	newAttractionForm.cost = 0;
 	newAttractionForm.type = "";
-	newAttractionForm.destination = formModel.value?.name || "";
+	newAttractionForm.description = "";
+	newAttractionForm.destination = destination.doc?.name || "";
 	attractionOpen.value = true;
 };
 
@@ -306,12 +371,7 @@ const handleSaveAttraction = async () => {
 		await attractions.reload();
 		attractionOpen.value = false;
 	} catch (error) {
-		if (error.errorFields) {
-			message.error("Please fix the errors below");
-		} else {
-			message.error("Failed to create attraction");
-			console.error("Create error:", error);
-		}
+		message.error(error.message || "Failed to create attraction");
 	} finally {
 		attractionSaving.value = false;
 	}
@@ -319,6 +379,13 @@ const handleSaveAttraction = async () => {
 
 const handleCancelAttraction = () => {
 	attractionOpen.value = false;
+	Object.assign(newAttractionForm, {
+		attraction_name: "",
+		cost: 0,
+		type: "",
+		description: "",
+		destination: ""
+	});
 };
 
 // ATTRACTION EDIT TABLE LOGIC
@@ -349,13 +416,4 @@ const deleteAttraction = async (name) => {
 		message.error("Failed to delete attraction");
 	}
 };
-
-// IMAGE HANDLERS
-const handleFileUpload = (file) => (formModel.value.image = file.file_url);
-// const handleImage = () => {
-//     formModel.value.images.push({ title: newImageForm.title, image: newImageForm.image })
-//     Object.assign(newImageForm, { title: '', image: '' })
-//     imageOpen.value = false
-//     message.success('Image added')
-// }
 </script>
