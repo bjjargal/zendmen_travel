@@ -7,11 +7,6 @@
     <a-table :columns="columns" :data-source="activities.data" size="small" :loading="activities.list.loading"
         :pagination="false" row-key="name" :scroll="{ y: 'calc(100vh - 280px)' }">
         <template #bodyCell="{ column, record }">
-            <template v-if="column.dataIndex === 'cost'">
-                <div>
-                    ${{ record.cost }}
-                </div>
-            </template>
             <template v-if="column.key === 'Action'">
                 <div class="editable-row-operations">
                     <div class="flex gap-2">
@@ -20,12 +15,12 @@
                                 <FeatherIcon name="edit" class="size-4" />
                             </template>
                         </a-button>
-                        <a-button @click="deleteRecord(record.name)" type="primary"
+                        <!-- <a-button @click="deleteRecord(record.name)" type="primary"
                             class="!flex justify-center items-center" danger>
                             <template #icon>
                                 <FeatherIcon name="trash-2" class="size-4" />
                             </template>
-                        </a-button>
+                        </a-button> -->
                     </div>
                 </div>
             </template>
@@ -35,13 +30,15 @@
         okText='Save' @ok="handleSave" :loading="saving" @cancel="handleCancel">
         <a-form :form="createFormRef" :model="formModel" :rules="formRules" layout="vertical">
             <a-form-item label="Activity Name" name="activity_name">
-                <a-input v-model:value="formModel.activity_name" placeholder="Enter activity name" />
+                <a-input v-model:value="formModel.activity_name" :disabled="!isCreate"
+                    placeholder="Enter activity name" />
             </a-form-item>
             <a-form-item label="Cost" name="cost">
-                <a-input-number v-model:value="formModel.cost" placeholder="Enter cost" class="!w-full" />
+                <a-input-number v-model:value="formModel.cost" placeholder="Enter cost" class="!w-full"
+                    :formatter="numberFormatter" :parser="numberParser" addon-after="₮" />
             </a-form-item>
             <a-form-item label="Description" name="description">
-                <a-textarea v-model:value="formModel.description" placeholder="Enter cost" class="!w-full" />
+                <a-textarea v-model:value="formModel.description" placeholder="Enter description" class="!w-full" />
             </a-form-item>
             <a-form-item label="Destinations" name="destinations">
                 <a-select v-model:value="formModel.destinations" :options="destinationOptions" mode="multiple"
@@ -169,6 +166,7 @@ const columns = [
         title: 'Cost',
         key: 'cost',
         dataIndex: 'cost',
+        customRender: ({ text }) => numberFormatter(text) + " ₮",
         width: '25%'
     },
     {
@@ -182,4 +180,16 @@ const columns = [
         width: '15%'
     }
 ]
+const numberFormatter = (value) => {
+    if (value === undefined || value === null) return '';
+    return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+const numberParser = (value) => {
+    if (!value) return '';
+    return value.replace(/,/g, '');
+}
+
+
+
 </script>

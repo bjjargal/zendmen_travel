@@ -39,13 +39,15 @@
                     class="!w-full"></a-input-number>
             </a-form-item>
             <a-form-item label="price" name="price">
-                <a-input-number v-model:value="Vehicle.doc.price" addon-after="₮" class="!w-full"></a-input-number>
+                <a-input-number v-model:value="Vehicle.doc.price" :formatter="numberFormatter" :parser="numberParser"
+                    addon-after="₮" class="!w-full"></a-input-number>
             </a-form-item>
             <a-form-item label="Description" name="description">
                 <a-textarea v-model:value="Vehicle.doc.description" :rows="3"></a-textarea>
             </a-form-item>
             <a-form-item label="Fuel cost per km" name="fuel_cost">
-                <a-input-number v-model:value="Vehicle.doc.fuel_cost" addon-after="₮" class="!w-full"></a-input-number>
+                <a-input-number v-model:value="Vehicle.doc.fuel_cost" :formatter="numberFormatter"
+                    :parser="numberParser" addon-after="₮" class="!w-full"></a-input-number>
             </a-form-item>
 
         </a-form>
@@ -62,13 +64,15 @@
                 <a-input-number v-model:value="newVehicle.consumption" addon-after="L" class="!w-full"></a-input-number>
             </a-form-item>
             <a-form-item label="price" name="price">
-                <a-input-number v-model:value="newVehicle.price" addon-after="₮" class="!w-full"></a-input-number>
+                <a-input-number v-model:value="newVehicle.price" :formatter="numberFormatter" :parser="numberParser"
+                    addon-after="₮" class="!w-full"></a-input-number>
             </a-form-item>
             <a-form-item label="Description" name="description">
                 <a-textarea v-model:value="newVehicle.description" :rows="3"></a-textarea>
             </a-form-item>
             <a-form-item label="Fuel cost per km" name="fuel_cost">
-                <a-input-number v-model:value="newVehicle.fuel_cost" addon-after="₮" class="!w-full"></a-input-number>
+                <a-input-number v-model:value="newVehicle.fuel_cost" :formatter="numberFormatter" :parser="numberParser"
+                    addon-after="₮" class="!w-full"></a-input-number>
             </a-form-item>
         </a-form>
     </a-modal>
@@ -81,6 +85,7 @@ import { createDocumentResource } from 'frappe-ui';
 import { message } from 'ant-design-vue';
 import { ref, reactive } from 'vue';
 import { vehicleStore } from '@/data/Vehicle';
+import { validateSearch } from 'ant-design-vue/es/vc-mentions/src/util';
 
 
 
@@ -174,6 +179,8 @@ const columns = [
         title: 'Price',
         key: 'price',
         dataIndex: 'price',
+        customRender: ({ text }) => numberFormatter(text) + " ₮"
+
     },
     {
         title: 'Description',
@@ -187,4 +194,15 @@ const columns = [
         dataIndex: 'Action',
     }
 ]
+const numberFormatter = (value) => {
+    if (value === undefined || value === null) return '';
+    return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+const numberParser = (value) => {
+    if (!value) return '';
+    return value.replace(/,/g, '');
+}
+
+
 </script>

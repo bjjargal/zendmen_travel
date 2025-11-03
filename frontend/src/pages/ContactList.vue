@@ -15,12 +15,12 @@
                                 <FeatherIcon name="edit" class="size-4" />
                             </template>
                         </a-button>
-                        <a-button @click="deleteRecord(record.name)" type="ghost" danger
+                        <!-- <a-button @click="deleteRecord(record.name)" type="ghost" danger
                             class="!flex justify-center items-center !text-red-500">
                             <template #icon>
                                 <FeatherIcon name="trash-2" class="size-4" />
                             </template>
-                        </a-button>
+                        </a-button> -->
                     </div>
                 </template>
             </template>

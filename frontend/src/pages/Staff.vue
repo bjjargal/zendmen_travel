@@ -37,7 +37,8 @@
 				<a-select v-model:value="staff.doc.type" :options="staffType" placeholder="select type" />
 			</a-form-item>
 			<a-form-item label="Price" name="price">
-				<a-input v-model:value="staff.doc.price" placeholder="Enter email" type="email" />
+				<a-input-number v-model:value="staff.doc.price" :formatter="numberFormatter" :parser="numberParser"
+					addon-after="₮" class="!w-full" />
 			</a-form-item>
 			<a-form-item label="Email" name="email">
 				<a-input v-model:value="staff.doc.email" placeholder="Enter email" type="email" />
@@ -70,7 +71,8 @@
 				<a-select v-model:value="newStaff.type" :options="staffType" placeholder="select type" />
 			</a-form-item>
 			<a-form-item label="Price" name="price">
-				<a-input v-model:value="newStaff.price" placeholder="Enter email" type="email" />
+				<a-input-number v-model:value="newStaff.price" :formatter="numberFormatter" :parser="numberParser"
+					addon-after="₮" class="!w-full" />
 			</a-form-item>
 			<a-form-item label="Email" name="email">
 				<a-input v-model:value="newStaff.email" placeholder="Enter email" type="email" />
@@ -205,7 +207,17 @@ const handleSave = async () => {
 		staffOpen.value = false;
 	} catch (error) {
 		message.error(error.message || "Failed to save");
-	} 
+	}
 };
+const numberFormatter = (value) => {
+	if (value === undefined || value === null) return '';
+	return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+const numberParser = (value) => {
+	if (!value) return '';
+	return value.replace(/,/g, '');
+}
+
 
 </script>

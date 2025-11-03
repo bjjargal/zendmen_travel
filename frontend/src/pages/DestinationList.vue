@@ -19,10 +19,10 @@
 								<FeatherIcon name="edit" class="w-4 h-4" />
 							</a-button>
 
-							<a-button @click="deleteDestination(record.name)" type="text" danger
+							<!-- <a-button @click="deleteDestination(record.name)" type="text" danger
 								class="!flex justify-center items-center text-red-500 hover:text-red-600 !p-0">
 								<FeatherIcon name="trash-2" class="w-4 h-4" />
-							</a-button>
+							</a-button> -->
 						</div>
 					</template>
 				</template>
@@ -46,11 +46,11 @@
 								placeholder="Enter description" />
 						</a-form-item>
 
-						<a-form-item label="Image Title" name="image_title">
+						<!-- <a-form-item label="Image Title" name="image_title">
 							<a-input v-model:value="createFormModel.image_title" placeholder="Enter image title" />
-						</a-form-item>
+						</a-form-item> -->
 					</a-form>
-					<div class=" flex flex-col">
+					<!-- <div class=" flex flex-col">
 						<FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false"
 							@success="handleCreateFileUpload" class="border-none">
 							<template #default="{ openFileSelector }">
@@ -64,7 +64,7 @@
 								</div>
 							</template>
 						</FileUploader>
-					</div>
+					</div> -->
 				</div>
 
 				<!-- RIGHT SIDE IMAGE UPLOAD -->
@@ -81,7 +81,7 @@
 				<div class="flex-1 space-y-3">
 					<a-form :model="destination.doc" layout="vertical">
 						<a-form-item label="Destination Name" name="destination_name">
-							<a-input v-model:value="destination.doc.destination_name"
+							<a-input v-model:value="destination.doc.destination_name" :disabled="true"
 								placeholder="Enter destination name" />
 						</a-form-item>
 
@@ -112,7 +112,7 @@
 										<a-input v-if="
 											editableData[record.name] &&
 											column.dataIndex === 'attraction_name'
-										" v-model:value="editableData[record.name][column.dataIndex]" size='small' />
+" v-model:value="editableData[record.name][column.dataIndex]" :disabled=true size='small' />
 										<a-input-number
 											v-else-if="editableData[record.name] && column.dataIndex === 'cost'"
 											v-model:value="editableData[record.name][column.dataIndex]"
@@ -144,10 +144,10 @@
 												class="text-blue-500 hover:text-blue-600">
 												<FeatherIcon name="edit" class="size-4" />
 											</a-button>
-											<a-button @click="deleteAttraction(record.name)" type="text" danger
+											<!-- <a-button @click="deleteAttraction(record.name)" type="text" danger
 												class="text-red-500 hover:text-red-600">
 												<FeatherIcon name="trash-2" class="size-4" />
-											</a-button>
+											</a-button> -->
 										</template>
 									</div>
 								</template>
@@ -189,10 +189,11 @@
 					</a-form-item>
 
 					<a-form-item label="Cost" name="cost">
-						<a-input-number v-model:value="newAttractionForm.cost" style="width: 100%;" />
+						<a-input-number v-model:value="newAttractionForm.cost" style="width: 100%;"
+							:formatter="numberFormatter" :parser="numberParser" addon-after="₮" />
 					</a-form-item>
 					<a-form-item label="Type" name="type">
-						<a-select v-model:value="newAttractionForm.type" :options="attractionTypes"
+						<a-select v-model:value="newAttractionForm.type" class="!w-full" :options="attractionTypes"
 							placeholder="Select type" />
 					</a-form-item>
 
@@ -228,6 +229,12 @@ const attractionTypes = [
 	{
 		value: "Monument",
 	},
+	{
+		value: "National Park"
+	},
+	{
+		value: "Natural attraction"
+	}
 ];
 const createOpen = ref(false);
 const editOpen = ref(false);
@@ -272,10 +279,10 @@ const columns = [
 ];
 
 const attractionColumns = [
-	{ title: "Attraction Name", dataIndex: "attraction_name", width: "30%" },
-	{ title: "Type", dataIndex: "type" },
-	{ title: "Description", dataIndex: "description" },
-	{ title: "Cost", dataIndex: "cost" },
+	{ title: "Attraction Name", dataIndex: "attraction_name", width: 200 },
+	{ title: "Type", dataIndex: "type", width: 200 },
+	{ title: "Description", dataIndex: "description", width: 200 },
+	{ title: "Cost", dataIndex: "cost", customRender: ({ text }) => numberFormatter(text) + " ₮" },
 	{ title: "Action", key: "Action" },
 ];
 
@@ -422,4 +429,14 @@ const deleteAttraction = async (name) => {
 		message.error("Failed to delete attraction");
 	}
 };
+const numberFormatter = (value) => {
+	if (value === undefined || value === null) return '';
+	return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+const numberParser = (value) => {
+	if (!value) return '';
+	return value.replace(/,/g, '');
+}
+
 </script>
