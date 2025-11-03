@@ -285,6 +285,12 @@ const handleCreateSave = async () => {
 		saving.value = true;
 		await destinations.insert.submit({ ...createFormModel });
 		message.success("Destination created successfully");
+		Object.assign(createFormModel, {
+			destination_name: "",
+			description: "",
+			image_title: "",
+			image: ""
+		});
 		await destinations.reload();
 		createOpen.value = false;
 	} catch (error) {
