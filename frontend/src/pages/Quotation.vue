@@ -6,6 +6,7 @@
             </template>
             <template #extra>
                 <a-space>
+                    <a-button @click="openPdf" type="dashed">Show PDF</a-button>
                     <a-button @click="saveDoc" :loading="!!quotation?.save?.loading" type="primary">Save</a-button>
                 </a-space>
             </template>
@@ -43,6 +44,13 @@
                             <a-form-item label="Total Distance" name="total_distance">
                                 <a-input-number v-model:value="quotation.doc.total_distance" addon-after="km"
                                     class="!w-full" />
+                            </a-form-item>
+                            <a-form-item label="difficulty" name="difficulty">
+                                <a-select v-model:value="quotation.doc.difficulty" :options="difficultyOptions"
+                                    class="!w-full" />
+                            </a-form-item>
+                            <a-form-item label="Subtitle" name="sub_title">
+                                <a-textarea v-model:value="quotation.doc.sub_title" :rows="4" />
                             </a-form-item>
                             <a-form-item label="Total minimum price" mame="total_min_price">
                                 <a-input-number v-model:value="quotation.doc.total_min_price"
@@ -100,6 +108,7 @@
                                                 :name="`attractions-${idx}`"
                                                 :options="getAttractionOptions(a.destination)" />
                                         </a-form-item>
+
                                         <a-form-item label="Min price" name="min_price">
                                             <a-input-number :disabled="true" v-model:value="a.min_price"
                                                 :formatter="numberFormatter" :parser="numberParser" addon-after="₮"
@@ -110,6 +119,27 @@
                                                 :formatter="numberFormatter" :parser="numberParser" addon-after="₮"
                                                 class="!w-full"></a-input-number>
                                         </a-form-item>
+                                        <a-form-item label="Image Description" name="image_title" class="mt-2">
+                                            <a-input v-model:value="a.image_title" allow-clear
+                                                placeholder="Enter image description" />
+                                        </a-form-item>
+                                        <a-form-item label="Image" name="image">
+                                            <FileUploader :fileTypes="['jpg', 'jpeg', 'png']" :multiple="false"
+                                                @success="(file) => (a.image = file.file_url)">
+                                                <template #default="{ openFileSelector }">
+                                                    <div class="rounded-md overflow-hidden cursor-pointer flex items-center justify-center"
+                                                        @click="openFileSelector">
+                                                        <img v-if="a.image" :src="a.image" alt="avatar"
+                                                            class="w-full h-60 object-cover" />
+                                                        <div v-else
+                                                            class="h-48 flex items-center justify-center text-gray-500">
+                                                            Upload Day Image
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </FileUploader>
+                                        </a-form-item>
+
                                     </a-form>
                                     <div class="flex flex-col gap-8">
                                         <a-card title="Vehicles" size="small"
@@ -315,6 +345,33 @@
                                                 </template>
                                             </a-table>
                                         </a-card>
+                                        <a-card title="Notes" size="small"
+                                            :headStyle="{ borderBottom: 'none', padding: '8px 16px' }">
+                                            <template #extra>
+                                                <a-button class="!flex items-center gap-2" @click="addNote">
+                                                    <template #icon>
+                                                        <FeatherIcon name="plus" class="size-4" />
+                                                    </template>
+                                                    add note
+                                                </a-button>
+                                            </template>
+                                            <div>
+                                                <a-table :columns="noteColumns" :pagination="false"
+                                                    :data-source="quotation.doc.notes?.filter(v => v.day === day) || []">
+                                                    <template #bodyCell="{ column, record }">
+                                                        <template v-if="column.dataIndex === 'note'">
+                                                            <a-textarea :rows="1" v-model:value="record.note"
+                                                                placeholder="Write note" />
+                                                        </template>
+                                                        <template v-if="column.dataIndex === 'Action'">
+                                                            <a-button danger size="small" @click="deleteNote(record)">
+                                                                <FeatherIcon name="trash" class="size-4" />
+                                                            </a-button>
+                                                        </template>
+                                                    </template>
+                                                </a-table>
+                                            </div>
+                                        </a-card>
                                     </div>
                                 </div>
                             </a-tab-pane>
@@ -324,21 +381,30 @@
             </a-spin>
         </div>
     </div>
+    <a-modal v-model:open="pdfOpen" title="Preview PDF" :width="'80%'" centered destroy-on-close :footer="false"
+        class="h-screen">
+        <div class="mt-4 h-full">
+            <iframe v-if="pdfUrl" :src="pdfUrl" width="100%" height="800px" frameborder="0"></iframe>
+
+            <div v-else class="text-center text-gray-500 py-10">
+                Loading PDF...
+            </div>
+        </div>
+    </a-modal>
 </template>
 
 <script setup>
-import { createDocumentResource } from "frappe-ui";
+import { createDocumentResource, FileUploader } from "frappe-ui";
 import { ref, computed, watch, watchEffect } from "vue";
 import { DestinationStore } from "@/data/destinations";
-import { ActivityStore } from "@/data/Activities";
-import { LayoutContent, message } from "ant-design-vue";
+// import { ActivityStore } from "@/data/Activities";
+import { message } from "ant-design-vue";
 import { ActivityDesStore } from "@/data/ActivityDestination";
 import { AttractionsStore } from "@/data/Attraction";
 import { vehicleStore } from "@/data/Vehicle";
 import { tourStore } from "@/data/Tour";
 import { staffStore } from "@/data/Staff";
 import { AccommodationsStore } from "@/data/Accomodations";
-import QuotationSubTable from "@/components/QuotationSubTable.vue";
 const props = defineProps({
     name: {
         type: String,
@@ -346,7 +412,7 @@ const props = defineProps({
     },
 });
 const { destinations } = DestinationStore();
-const { activities } = ActivityStore();
+
 const { activitiesDes } = ActivityDesStore();
 const { attractions } = AttractionsStore();
 const { vehicles } = vehicleStore()
@@ -377,6 +443,17 @@ const getAccommodationOptions = (destination) => {
         options,
     }));
 };
+
+const pdfOpen = ref(false);
+const pdfUrl = ref(null)
+const openPdf = () => {
+    pdfOpen.value = true
+    const url = `/api/method/frappe.utils.print_format.download_pdf?doctype=Quotation&name=${quotation.doc.name}&format=Quotation&no_letterhead=1&letterhead=No%20Letterhead&settings=%7B%7D&_lang=en`
+    console.log(url)
+    pdfUrl.value = url
+}
+
+
 
 
 const staffOptions = computed(() => {
@@ -536,7 +613,7 @@ watch(
     },
     { immediate: true },
 );
-
+const difficultyOptions = [{ value: "Easy" }, { value: "Moderate" }, { value: "Challenging" }];
 
 const saveDoc = async () => {
     try {
@@ -626,6 +703,26 @@ const deleteAttraction = (record) => {
         quotation.doc.attractions = quotation.doc.attractions.filter((n) => n !== record);
     }
     message.success("Attraction deleted");
+};
+
+const addNote = () => {
+    quotation.doc.notes.push({
+        day: current.value,
+        note: "",
+        parent: quotation.doc.name,
+        parenttype: "Tour",
+        parentfield: "notes",
+        doctype: "Tour Note",
+    });
+};
+const deleteNote = (note) => {
+    if (!quotation.doc.notes || !Array.isArray(quotation.doc.notes)) return;
+    if (note.name) {
+        quotation.doc.notes = quotation.doc.notes.filter((n) => n.name !== note.name);
+    } else {
+        quotation.doc.notes = quotation.doc.notes.filter((n) => n !== note);
+    }
+    message.success("Note deleted");
 };
 
 const getVehicle = (record) => {
@@ -851,6 +948,10 @@ const AttractionColumns = [
         width: 100
     },
 ]
+const noteColumns = [
+    { title: "Note", dataIndex: "note" },
+    { title: "Action", dataIndex: "Action", key: "Action" },
+];
 
 const numberFormatter = (value) => {
     if (value === undefined || value === null) return '';

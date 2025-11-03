@@ -7,13 +7,17 @@
  "engine": "InnoDB",
  "field_order": [
   "tour",
-  "duration",
+  "sub_title",
+  "difficulty",
   "naming_series",
   "min_price",
   "max_price",
   "column_break_wkvt",
+  "total_distance",
   "min_people",
   "max_people",
+  "duration",
+  "image",
   "category",
   "total_min_price",
   "total_max_price",
@@ -23,7 +27,8 @@
   "activities",
   "vehicle",
   "staffs",
-  "tourist_accomodation"
+  "tourist_accomodation",
+  "notes"
  ],
  "fields": [
   {
@@ -122,12 +127,39 @@
    "fieldname": "total_max_price",
    "fieldtype": "Currency",
    "label": "Total max price"
+  },
+  {
+   "fieldname": "sub_title",
+   "fieldtype": "Small Text",
+   "label": "Sub Title"
+  },
+  {
+   "fieldname": "difficulty",
+   "fieldtype": "Select",
+   "label": "Difficulty",
+   "options": "Easy\nModerate\nChallenging"
+  },
+  {
+   "fieldname": "total_distance",
+   "fieldtype": "Int",
+   "label": "Total Distance"
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "label": "Image"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Table",
+   "label": "Notes",
+   "options": "Tour Notes"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-31 14:53:09.785183",
+ "modified": "2025-11-03 09:48:27.244003",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Quotation",

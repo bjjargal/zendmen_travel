@@ -11,17 +11,22 @@ class Quotation(Document):
         self.get_tour(self.tour)
 
     def validate(self):
-        self.total_min_price = sum([i.min_price for i in self.accomodation])
-        self.total_max_price = sum([i.max_price for i in self.accomodation])
+        if self.accomodation:
+            self.total_min_price = sum([i.min_price for i in self.accomodation])
+            self.total_max_price = sum([i.max_price for i in self.accomodation])
 
     @frappe.whitelist()
-    def get_tour(self,tour_name):
+    def get_tour(self, tour_name):
         try:
             if not self.tour:
                 return
             self.attractions, self.accomodation, self.activities = [], [], []
             self.tour = tour_name
             tour = frappe.get_doc("Tour", self.tour)
+            self.sub_title = tour.sub_title
+            self.difficulty = tour.difficulty
+            self.total_distance = tour.total_distance
+            self.image = tour.image
             self.duration = tour.duration
             self.min_people = tour.min_people
             self.max_people = tour.max_people
@@ -29,18 +34,27 @@ class Quotation(Document):
                 self.append(
                     "activities", {"activity_name": i.activity_name, "day": i.day}
                 )
-
             for i in tour.accomodation:
                 self.append(
                     "accomodation",
                     {
                         "day": i.day,
                         "destination": i.destination,
+                        "title": i.title,
+                        "difficulty": i.difficulty,
                         "accomodation": i.accomodation,
+                        "hotel_star": i.hotel_star,
                         "breakfast": i.breakfast,
                         "lunch": i.lunch,
                         "dinner": i.dinner,
                         "distance": i.distance,
+                        "drive_time": i.drive_time,
+                        "terrain": i.terrain,
+                        "altitude": i.altitude,
+                        "image": i.image,
+                        "image_title": i.image_title,
+                        "min_price": i.min_price,
+                        "max_price": i.max_price,
                     },
                 )
             for i in tour.attractions:
