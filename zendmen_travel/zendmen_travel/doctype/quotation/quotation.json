@@ -137,7 +137,7 @@
    "fieldname": "difficulty",
    "fieldtype": "Select",
    "label": "Difficulty",
-   "options": "Easy\nModerate\nChallenging"
+   "options": "Easy\nModerate\nChallenging\nEasy-Moderate"
   },
   {
    "fieldname": "total_distance",
@@ -159,7 +159,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-03 09:48:27.244003",
+ "modified": "2025-12-05 12:09:49.389388",
  "modified_by": "Administrator",
  "module": "Zendmen Travel",
  "name": "Quotation",
